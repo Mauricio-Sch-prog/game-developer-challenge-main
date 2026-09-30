@@ -14,3 +14,11 @@ dist/
 
 # Logs
 *.log
+
+*.secret.md
+.vercel
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
