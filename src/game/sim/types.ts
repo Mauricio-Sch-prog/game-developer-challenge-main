@@ -23,6 +23,31 @@ export interface Ship {
   alive: boolean
 }
 
+/** Who fired a projectile: player shots only hit enemies and vice versa. */
+export type Team = 'player' | 'enemy'
+
+export interface Projectile {
+  team: Team
+  x: number
+  y: number
+  /** Velocity in px/s. */
+  vx: number
+  vy: number
+  radius: number
+  damage: number
+  /** Seconds left before it falls into the water. */
+  ttl: number
+  /** Set to false the moment it hits something, so damage is applied only once. */
+  alive: boolean
+}
+
+/** Seconds until each weapon can fire again (0 = ready). */
+export interface WeaponCooldowns {
+  front: number
+  left: number
+  right: number
+}
+
 /** What the player wants to do this frame, already decoupled from keyboard/touch. */
 export interface PlayerIntent {
   thrust: boolean
@@ -33,12 +58,32 @@ export interface PlayerIntent {
   fireRight: boolean
 }
 
+export type MatchStatus = 'running' | 'over'
+export type EndReason = 'time' | 'death'
+
+/**
+ * One-shot things that happened during a step. The render layer turns them
+ * into visual effects (and later sounds); the simulation never draws.
+ */
+export type GameEvent =
+  | { type: 'shot'; x: number; y: number; angle: number }
+  | { type: 'splash'; x: number; y: number }
+  | { type: 'impact'; x: number; y: number }
+
 export interface World {
   /** Snapshot of the configuration taken when the match started. */
   config: GameConfig
   islands: Rect[]
   player: Ship
+  playerCooldowns: WeaponCooldowns
+  projectiles: Projectile[]
   /** Simulated seconds since the match started (paused time is not counted). */
   elapsed: number
+  timeLeft: number
+  score: number
+  status: MatchStatus
+  endReason: EndReason | null
+  /** Events of the last step only; cleared at the start of every step. */
+  events: GameEvent[]
   nextId: number
 }

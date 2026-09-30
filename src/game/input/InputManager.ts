@@ -24,6 +24,11 @@ const PAUSE_KEYS: ReadonlySet<string> = new Set(['Escape', 'KeyP'])
  */
 export class InputManager {
   private readonly held = new Set<Action>()
+  /**
+   * Actions pressed since the last frame. A key pressed and released between
+   * two frames is still seen once, so quick taps are never lost.
+   */
+  private readonly tapped = new Set<Action>()
   private target: Window | null = null
   private enabled = true
 
@@ -42,33 +47,52 @@ export class InputManager {
     this.target.removeEventListener('keydown', this.handleKeyDown)
     this.target.removeEventListener('keyup', this.handleKeyUp)
     this.target = null
-    this.held.clear()
+    this.clear()
     this.onPauseKey = null
   }
 
-  /** While disabled (e.g. paused), held keys are dropped so nothing "fires" on resume. */
+  /**
+   * While disabled (paused or match over) game keys are ignored and not
+   * captured, so menus/dialogs keep working. Held keys are dropped so nothing
+   * "fires" on resume.
+   */
   setEnabled(enabled: boolean): void {
+    if (enabled === this.enabled) return
     this.enabled = enabled
-    this.held.clear()
+    this.clear()
   }
 
   /** Entry point for virtual buttons; goes through the same state as the keyboard. */
   setAction(action: Action, down: boolean): void {
-    if (!this.enabled) return
-    if (down) this.held.add(action)
+    if (down) this.press(action)
     else this.held.delete(action)
   }
 
+  /** Called once per simulation step. */
   readIntent(): PlayerIntent {
-    const left = this.held.has('turnLeft')
-    const right = this.held.has('turnRight')
-    return {
-      thrust: this.held.has('forward'),
+    const active = (action: Action) => this.held.has(action) || this.tapped.has(action)
+    const left = active('turnLeft')
+    const right = active('turnRight')
+    const intent: PlayerIntent = {
+      thrust: active('forward'),
       turn: left === right ? 0 : left ? -1 : 1,
-      fireFront: this.held.has('fireFront'),
-      fireLeft: this.held.has('fireLeft'),
-      fireRight: this.held.has('fireRight'),
+      fireFront: active('fireFront'),
+      fireLeft: active('fireLeft'),
+      fireRight: active('fireRight'),
     }
+    this.tapped.clear()
+    return intent
+  }
+
+  private press(action: Action): void {
+    if (!this.enabled) return
+    this.held.add(action)
+    this.tapped.add(action)
+  }
+
+  private clear(): void {
+    this.held.clear()
+    this.tapped.clear()
   }
 
   private readonly handleKeyDown = (event: KeyboardEvent): void => {
@@ -81,7 +105,7 @@ export class InputManager {
     if (!action || !this.enabled) return
     // Stops arrows/space from scrolling the page while playing.
     event.preventDefault()
-    this.held.add(action)
+    this.press(action)
   }
 
   private readonly handleKeyUp = (event: KeyboardEvent): void => {

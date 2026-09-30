@@ -15,7 +15,7 @@ export default function App() {
   const play = () => setMatch({ id: Date.now(), config: structuredClone(DEFAULT_CONFIG) })
 
   if (match) {
-    return <GameScreen key={match.id} config={match.config} onExit={() => setMatch(null)} />
+    return <GameScreen key={match.id} config={match.config} onRestart={play} onExit={() => setMatch(null)} />
   }
 
   // Temporary menu; replaced by the real screens on night 2.
