@@ -82,108 +82,117 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
 
   return (
     <main className="screen">
-      <form className="panel" onSubmit={submit} noValidate>
+      <form className="panel options-panel" onSubmit={submit} noValidate>
         <h1>Options</h1>
 
-        <div className="option-field">
-          <label htmlFor="player-name">Captain name</label>
-          <input
-            ref={nameRef}
-            id="player-name"
-            className="text-input"
-            type="text"
-            autoComplete="nickname"
-            maxLength={PLAYER_NAME_LIMITS.max + 10}
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value)
-              setSaveStatus('idle')
-            }}
-            aria-invalid={nameError ? true : undefined}
-            aria-describedby={nameError ? 'player-name-hint player-name-error' : 'player-name-hint'}
-          />
-          <p id="player-name-hint" className="hint">
-            Shown in the ranking ({PLAYER_NAME_LIMITS.min}–{PLAYER_NAME_LIMITS.max} characters)
-          </p>
-          {nameError && (
-            <p id="player-name-error" className="field-error">
-              {nameError}
-            </p>
-          )}
-        </div>
-
-        {FIELDS.map(({ key, label }) => {
-          const { min, max, step: size } = OPTION_LIMITS[key]
-          const error = errors[key]
-          const hintId = `${key}-hint`
-          const errorId = `${key}-error`
-          return (
-            <div className="option-field" key={key}>
-              <label htmlFor={key}>{label}</label>
-              <div className="stepper">
-                <button
-                  type="button"
-                  className="round-button"
-                  aria-label={`Decrease ${label}`}
-                  onClick={() => step(key, -1)}
-                >
-                  <img src={`${CONTROLS}/icon_minus.png`} alt="" />
-                </button>
-                <input
-                  ref={(element) => {
-                    inputRefs.current[key] = element
-                  }}
-                  id={key}
-                  type="number"
-                  inputMode="decimal"
-                  min={min}
-                  max={max}
-                  step={size}
-                  value={values[key]}
-                  onChange={(event) => setValue(key, event.target.value)}
-                  aria-invalid={error ? true : undefined}
-                  aria-describedby={error ? `${hintId} ${errorId}` : hintId}
-                />
-                <span aria-hidden="true">s</span>
-                <button
-                  type="button"
-                  className="round-button"
-                  aria-label={`Increase ${label}`}
-                  onClick={() => step(key, 1)}
-                >
-                  <img src={`${CONTROLS}/icon_plus.png`} alt="" />
-                </button>
-              </div>
-              <p id={hintId} className="hint">
-                {min}–{max} seconds
+        {/* Scrolls on short screens; the title and the actions below stay in view. */}
+        <div className="options-body panel-scroll">
+          <div className="options-column">
+            <div className="option-field">
+              <label htmlFor="player-name">Captain name</label>
+              <input
+                ref={nameRef}
+                id="player-name"
+                className="text-input"
+                type="text"
+                autoComplete="nickname"
+                maxLength={PLAYER_NAME_LIMITS.max + 10}
+                value={name}
+                onChange={(event) => {
+                  setName(event.target.value)
+                  setSaveStatus('idle')
+                }}
+                aria-invalid={nameError ? true : undefined}
+                aria-describedby={nameError ? 'player-name-hint player-name-error' : 'player-name-hint'}
+              />
+              <p id="player-name-hint" className="hint">
+                Shown in the ranking ({PLAYER_NAME_LIMITS.min}–{PLAYER_NAME_LIMITS.max} characters)
               </p>
-              {error && (
-                <p id={errorId} className="field-error">
-                  {error}
+              {nameError && (
+                <p id="player-name-error" className="field-error">
+                  {nameError}
                 </p>
               )}
             </div>
-          )
-        })}
 
-        <label className="toggle">
-          <input type="checkbox" checked={soundOn} onChange={(event) => toggleSound(event.target.checked)} />
-          Sound effects and music
-        </label>
+            {FIELDS.map(({ key, label }) => {
+              const { min, max, step: size } = OPTION_LIMITS[key]
+              const error = errors[key]
+              const hintId = `${key}-hint`
+              const errorId = `${key}-error`
+              return (
+                <div className="option-field" key={key}>
+                  <label htmlFor={key}>{label}</label>
+                  <div className="stepper">
+                    <button
+                      type="button"
+                      className="round-button"
+                      aria-label={`Decrease ${label}`}
+                      onClick={() => step(key, -1)}
+                    >
+                      <img src={`${CONTROLS}/icon_minus.png`} alt="" />
+                    </button>
+                    <input
+                      ref={(element) => {
+                        inputRefs.current[key] = element
+                      }}
+                      id={key}
+                      type="number"
+                      inputMode="decimal"
+                      min={min}
+                      max={max}
+                      step={size}
+                      value={values[key]}
+                      onChange={(event) => setValue(key, event.target.value)}
+                      aria-invalid={error ? true : undefined}
+                      aria-describedby={error ? `${hintId} ${errorId}` : hintId}
+                    />
+                    <span aria-hidden="true">s</span>
+                    <button
+                      type="button"
+                      className="round-button"
+                      aria-label={`Increase ${label}`}
+                      onClick={() => step(key, 1)}
+                    >
+                      <img src={`${CONTROLS}/icon_plus.png`} alt="" />
+                    </button>
+                  </div>
+                  <p id={hintId} className="hint">
+                    {min}–{max} seconds
+                  </p>
+                  {error && (
+                    <p id={errorId} className="field-error">
+                      {error}
+                    </p>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="options-column">
+            <label className="toggle">
+              <input type="checkbox" checked={soundOn} onChange={(event) => toggleSound(event.target.checked)} />
+              Sound effects and music
+            </label>
+
+            <MockApiPanel />
+          </div>
+        </div>
 
         <p className="save-status" role="status">
           {saveStatus === 'saved' && 'Options saved. They apply to your next match.'}
           {saveStatus === 'failed' && 'Could not save on this device (storage unavailable).'}
         </p>
 
-        <button type="submit" className="btn btn-primary">
-          Save
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={onBack} data-sound="close">
-          Main Menu
-        </button>
-
-        <MockApiPanel />
+        <div className="btn-row">
+          <button type="submit" className="btn btn-primary">
+            Save
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={onBack} data-sound="close">
+            Main Menu
+          </button>
+        </div>
       </form>
     </main>
   )

@@ -24,12 +24,14 @@ export function MainMenu({ onPlay, onOptions, onRecords }: MainMenuProps) {
           </h1>
           <p className="tagline">Set sail. Take command.</p>
 
-          <button type="button" className="btn btn-primary" onClick={onPlay} autoFocus>
-            Play
-          </button>
-          <button type="button" className="btn btn-primary" onClick={onOptions} data-sound="open">
-            Options
-          </button>
+          <div className="btn-row">
+            <button type="button" className="btn btn-primary" onClick={onPlay} autoFocus>
+              Play
+            </button>
+            <button type="button" className="btn btn-primary" onClick={onOptions} data-sound="open">
+              Options
+            </button>
+          </div>
           <div className="menu-records">
             <button type="button" className="btn btn-secondary btn-small" onClick={() => onRecords('ranking')} data-sound="open">
               Ranking

@@ -54,12 +54,14 @@ export function ResultScreen({ result, onPlayAgain, onMainMenu }: ResultScreenPr
         </p>
         <RegistrationStatus matchId={result.matchId} />
 
-        <button type="button" className="btn btn-primary" onClick={onPlayAgain} autoFocus>
-          Play Again
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={onMainMenu} data-sound="back">
-          Main Menu
-        </button>
+        <div className="btn-row">
+          <button type="button" className="btn btn-primary" onClick={onPlayAgain} autoFocus>
+            Play Again
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={onMainMenu} data-sound="back">
+            Main Menu
+          </button>
+        </div>
       </div>
     </main>
   )

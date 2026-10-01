@@ -68,7 +68,13 @@ export function RecordsScreen({ initialTab, onBack }: RecordsScreenProps) {
           ))}
         </div>
 
-        <div className="records-body" role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+        {/* Scrolls on short screens; the title, tabs and Main Menu stay in view. */}
+        <div
+          className="records-body panel-scroll"
+          role="tabpanel"
+          id={`panel-${tab}`}
+          aria-labelledby={`tab-${tab}`}
+        >
           {/* Switching tabs remounts it: the cached page shows at once and refreshes in the background. */}
           {tab === 'ranking' ? <RankingTab config={config} player={player} /> : <HistoryTab player={player} />}
         </div>

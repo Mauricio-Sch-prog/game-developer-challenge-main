@@ -5,6 +5,12 @@
   background: #0b2a3a;
   --gold: #f6d58e;
   --error: #ffb4a8;
+  /*
+   * Menu sizing unit: 16px on tall windows, shrinking with the window height
+   * (down to 10px) so every menu fits on screen. Frames, buttons, images and
+   * spacing are multiples of it; body text stays in rem to remain readable.
+   */
+  --ui-unit: clamp(10px, 2dvh, 16px);
 }
 
 html,
@@ -46,12 +52,13 @@ button:disabled {
 
 /* ---------- Screens and panels ---------- */
 
+/* The page never scrolls: panels are capped to the screen height instead. */
 .screen {
   height: 100%;
-  overflow-y: auto;
-  /* margin:auto centering stays scrollable when the panel is taller than the screen. */
+  overflow: hidden;
   display: flex;
-  padding: 16px;
+  padding: max(var(--ui-unit), env(safe-area-inset-top)) max(var(--ui-unit), env(safe-area-inset-right))
+    max(var(--ui-unit), env(safe-area-inset-bottom)) max(var(--ui-unit), env(safe-area-inset-left));
   box-sizing: border-box;
   background: url('/ui_scene_background.png') center / cover;
 }
@@ -60,25 +67,48 @@ button:disabled {
   margin: auto;
 }
 
-/* 9-slice panel: borders from ui_sheet.json (panel_menu → borders). */
+/*
+ * 9-slice panel: borders from ui_sheet.json (panel_menu → borders). The frame
+ * is the real border, so content that scrolls inside the panel (last resort on
+ * tiny windows) is clipped at the frame's inner edge.
+ */
 .panel {
-  display: grid;
-  gap: 0.75rem;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--ui-unit) * 0.75);
   width: min(420px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
   box-sizing: border-box;
-  padding: 44px 40px;
+  /* Room for the 6px focus outline (3px + 3px offset) inside the clip. */
+  padding: 6px 8px;
   text-align: center;
   border-style: solid;
+  border-width: calc(var(--ui-unit) * 2.5) calc(var(--ui-unit) * 2);
   border-image-source: url('/png/default/ui/menu/panel_menu.png');
   border-image-slice: 40 32 fill;
-  border-image-width: 40px 32px;
+}
+
+/* Part of a panel that scrolls on its own, keeping the title and actions in view. */
+.panel-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  /* Same layout, but focus outlines at the top/bottom edges are not clipped. */
+  padding-block: 6px;
+  margin-block: -6px;
+}
+
+.panel,
+.panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #8a5a2b transparent;
 }
 
 .panel h1,
 .panel h2 {
   margin: 0;
-  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-size: clamp(1.25rem, min(5vw, calc(var(--ui-unit) * 2.2)), 2.2rem);
   font-weight: 900;
   text-transform: uppercase;
   color: var(--gold);
@@ -94,7 +124,7 @@ button:disabled {
 }
 
 .title img {
-  width: min(320px, 100%);
+  width: min(calc(var(--ui-unit) * 20), 100%);
 }
 
 .tagline {
@@ -111,16 +141,16 @@ button:disabled {
 /* ---------- Buttons (PNG skins from ui/menu, 256x88) ---------- */
 
 .btn {
-  width: min(240px, 100%);
+  width: min(calc(var(--ui-unit) * 15), 100%);
   aspect-ratio: 256 / 88;
   padding: 0;
   border: none;
   font-weight: 800;
-  font-size: 1.15rem;
+  font-size: max(0.85rem, calc(var(--ui-unit) * 1.15));
   text-transform: uppercase;
   background: center / 100% 100% no-repeat;
   /* Makes the focus outline follow the rounded button art. */
-  border-radius: 22px;
+  border-radius: calc(var(--ui-unit) * 1.375);
 }
 
 .btn-primary {
@@ -145,9 +175,21 @@ button:disabled {
   background-image: url('/png/default/ui/menu/button_secondary_pressed.png');
 }
 
+/*
+ * Side by side when they fit, stacked otherwise. Buttons shrink on short
+ * windows, so they line up exactly when vertical space is scarce.
+ */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(var(--ui-unit) * 0.75);
+  width: 100%;
+}
+
 .round-button {
-  width: 48px;
-  height: 48px;
+  width: max(36px, calc(var(--ui-unit) * 3));
+  height: max(36px, calc(var(--ui-unit) * 3));
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -172,7 +214,9 @@ button:disabled {
 
 .menu-actions {
   display: grid;
-  gap: 0.75rem;
+  /* minmax(0, …): the column may be narrower than its content, so the button rows shrink. */
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--ui-unit) * 0.75);
   justify-items: center;
   width: 100%;
 }
@@ -209,6 +253,25 @@ button:disabled {
 }
 
 /* ---------- Options ---------- */
+
+.options-panel {
+  width: min(760px, 100%);
+}
+
+/* Two columns when there is room: saved options left, instant ones (sound, mock API) right. */
+.options-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  align-items: start;
+  gap: calc(var(--ui-unit) * 0.75) calc(var(--ui-unit) * 1.5);
+  width: 100%;
+}
+
+.options-column {
+  display: grid;
+  gap: calc(var(--ui-unit) * 0.75);
+  justify-items: center;
+}
 
 .option-field {
   display: grid;
@@ -270,9 +333,10 @@ button:disabled {
 
 /* ---------- Shared small controls ---------- */
 
+/* Floor keeps "Match History" inside the button art. */
 .btn-small {
-  width: min(170px, 100%);
-  font-size: 0.85rem;
+  width: max(136px, calc(var(--ui-unit) * 10.5));
+  font-size: max(0.75rem, calc(var(--ui-unit) * 0.85));
 }
 
 .link-button {
@@ -300,11 +364,12 @@ button:disabled {
   border-color: var(--error);
 }
 
+/* Side by side on one row: the buttons shrink together instead of wrapping. */
 .menu-records {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
+  gap: calc(var(--ui-unit) * 0.5);
+  width: 100%;
 }
 
 .mock-panel {
@@ -312,7 +377,8 @@ button:disabled {
   gap: 0.4rem;
   justify-items: center;
   width: 100%;
-  margin: 0.5rem 0 0;
+  box-sizing: border-box;
+  margin: 0;
   padding: 0.75rem;
   border: 1px dashed rgb(246 213 142 / 40%);
   border-radius: 10px;
@@ -332,21 +398,22 @@ button:disabled {
   width: min(860px, 100%);
 }
 
+/* Side by side on one row: the tabs shrink together instead of wrapping. */
 .records-tabs {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.75rem;
+  gap: calc(var(--ui-unit) * 0.75);
+  width: 100%;
 }
 
 .records-tabs .btn {
-  width: min(210px, 42vw);
-  font-size: 1rem;
+  width: calc(var(--ui-unit) * 13);
+  font-size: max(0.8rem, var(--ui-unit));
 }
 
 .records-body {
   display: grid;
-  gap: 0.5rem;
+  gap: calc(var(--ui-unit) * 0.5);
   justify-items: center;
   width: 100%;
 }
@@ -397,7 +464,7 @@ button:disabled {
 .records-table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 6px;
+  border-spacing: 0 calc(var(--ui-unit) * 0.375);
   text-align: left;
   font-weight: 700;
 }
@@ -411,7 +478,7 @@ button:disabled {
 }
 
 .records-table td {
-  padding: 0.55rem 0.75rem;
+  padding: calc(var(--ui-unit) * 0.5) 0.75rem;
   background: rgb(9 24 36 / 70%);
   white-space: nowrap;
 }
@@ -475,8 +542,8 @@ button:disabled {
 }
 
 .pagination .round-button {
-  width: 40px;
-  height: 40px;
+  width: max(32px, calc(var(--ui-unit) * 2.5));
+  height: max(32px, calc(var(--ui-unit) * 2.5));
 }
 
 /* ---------- Registration status (result screen) ---------- */
@@ -504,7 +571,7 @@ button:disabled {
 }
 
 .result-score strong {
-  font-size: clamp(3rem, 12vw, 4.5rem);
+  font-size: clamp(2.5rem, min(12vw, calc(var(--ui-unit) * 4.5)), 4.5rem);
   color: var(--gold);
 }
 
@@ -724,37 +791,62 @@ button:disabled {
   font-weight: 700;
 }
 
-/* Phones in landscape are short: tighten panels so dialogs fit without cuts. */
+/* Phones in landscape are short: the pause dialog scrolls instead of being cut. */
 @media (max-height: 520px) {
-  .panel {
-    gap: 0.5rem;
-    padding: 28px 32px;
-  }
-
-  .btn {
-    width: min(190px, 100%);
-    font-size: 1rem;
-  }
-
   .overlay {
     overflow-y: auto;
   }
-
-  .title img {
-    width: min(240px, 100%);
-  }
 }
 
-/* Short and wide (phone in landscape): menu actions and controls side by side. */
-@media (max-height: 520px) and (min-width: 640px) {
+/*
+ * Short and wide (laptop browser window, phone in landscape): the tall
+ * single-column menus would not fit, so they are laid out side by side.
+ */
+@media (max-height: 700px) and (min-width: 560px) {
   .menu-panel {
+    display: grid;
     width: min(760px, 100%);
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
-    column-gap: 2rem;
+    column-gap: calc(var(--ui-unit) * 2);
   }
 
   .menu-panel .controls {
     margin-top: 0;
+  }
+
+  /* Title, tabs and Main Menu on the left (vertically centered), the list on the right. */
+  .records-panel {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto auto auto 1fr;
+    grid-template-areas:
+      '. body'
+      'title body'
+      'tabs body'
+      'back body'
+      '. body';
+    justify-items: center;
+    column-gap: calc(var(--ui-unit) * 1.5);
+  }
+
+  .records-panel h1 {
+    grid-area: title;
+  }
+
+  .records-tabs {
+    grid-area: tabs;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .records-body {
+    grid-area: body;
+    align-self: center;
+    max-height: 100%;
+  }
+
+  .records-panel > .btn {
+    grid-area: back;
   }
 }
