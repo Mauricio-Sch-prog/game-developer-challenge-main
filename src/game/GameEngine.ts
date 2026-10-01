@@ -10,7 +10,7 @@ import { ShipView } from './render/ShipView'
 import type { GameStore, HudState } from './store/GameStore'
 import type { World } from './sim/types'
 import { createWorld, updateWorld } from './sim/world'
-import { testHooksEnabled, type PirateBattleTestHooks } from './testHooks'
+import { manualClockRequested, testHooksEnabled, type PirateBattleTestHooks } from './testHooks'
 
 /**
  * Longest single simulation step. Slow frames are split into several steps,
@@ -20,6 +20,8 @@ import { testHooksEnabled, type PirateBattleTestHooks } from './testHooks'
 const MAX_STEP = 1 / 30
 /** Frame time above this is a hitch (tab stall, debugger) and is dropped. */
 const MAX_FRAME_TIME = 0.25
+/** Frame rate of the test clock (`advance`). */
+const TEST_FPS = 60
 const LETTERBOX_COLOR = '#0b2a3a'
 
 /** HUD values for a fresh match, before the engine has run a single frame. */
@@ -59,6 +61,8 @@ export class GameEngine {
   private effectsLayer: EffectsLayer | null = null
   private paused = false
   private destroyed = false
+  /** Test clock: the ticker never runs, frames only come from `advance`. */
+  private readonly manualClock = manualClockRequested()
   private testHooks: PirateBattleTestHooks | null = null
 
   /** `seed` makes enemy spawns reproducible (same seed, same match). */
@@ -101,8 +105,13 @@ export class GameEngine {
     this.audio.start()
 
     if (testHooksEnabled()) {
-      this.testHooks = { getWorld: () => this.world }
+      this.testHooks = { getWorld: () => this.world, advance: this.advance }
       window.__PIRATE_BATTLE__ = this.testHooks
+    }
+    if (this.manualClock) {
+      // Stopped before its first frame: the match starts exactly at t = 0.
+      app.ticker.stop()
+      app.render()
     }
   }
 
@@ -148,7 +157,7 @@ export class GameEngine {
     this.paused = false
     this.input.setEnabled(true)
     // Ticker.start() resets its clock, so the paused time is never simulated.
-    this.app.ticker.start()
+    if (!this.manualClock) this.app.ticker.start()
     this.audio.resume()
     this.store.update({ status: 'running' })
   }
@@ -192,7 +201,23 @@ export class GameEngine {
 
   /** Game loop, driven by the Pixi ticker (requestAnimationFrame). */
   private readonly tick = (ticker: Ticker): void => {
-    const frameTime = Math.min(ticker.deltaMS / 1000, MAX_FRAME_TIME)
+    this.runFrame(ticker.deltaMS / 1000)
+  }
+
+  /** Test clock: same frames as the real loop, at a fixed rate, drawn once at the end. */
+  private readonly advance = (seconds: number, beforeFrame?: (world: Readonly<World>) => void): void => {
+    if (!this.manualClock || !this.app || this.paused) return
+    const frames = Math.round(seconds * TEST_FPS)
+    for (let i = 0; i < frames; i++) {
+      beforeFrame?.(this.world)
+      this.runFrame(1 / TEST_FPS)
+    }
+    this.app.render()
+  }
+
+  /** One frame: input → simulation (sub-stepped) → effects and audio → views → HUD. */
+  private runFrame(seconds: number): void {
+    const frameTime = Math.min(seconds, MAX_FRAME_TIME)
     const intent = this.input.readIntent()
 
     let remaining = frameTime
@@ -250,7 +275,7 @@ export class GameEngine {
     const scale = Math.min(screenWidth / width, screenHeight / height)
     this.worldLayer.scale.set(scale)
     this.worldLayer.position.set((screenWidth - width * scale) / 2, (screenHeight - height * scale) / 2)
-    // The ticker is stopped while paused, so redraw once at the new size.
-    if (this.paused) this.app?.render()
+    // The ticker is stopped while paused (and under the test clock), so redraw once at the new size.
+    if (this.paused || this.manualClock) this.app?.render()
   }
 }
