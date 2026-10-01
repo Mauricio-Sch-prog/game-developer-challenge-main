@@ -47,12 +47,10 @@ export function validateOptions(options: PlayerOptions): OptionErrors {
 export function loadOptions(): PlayerOptions {
   const stored = readJson(STORAGE_KEY)
   if (!isRecord(stored)) return DEFAULT_OPTIONS
-  const options = { sessionSeconds: stored.sessionSeconds, spawnIntervalSeconds: stored.spawnIntervalSeconds }
-  if (typeof options.sessionSeconds !== 'number' || typeof options.spawnIntervalSeconds !== 'number') {
-    return DEFAULT_OPTIONS
-  }
-  const typed: PlayerOptions = { sessionSeconds: options.sessionSeconds, spawnIntervalSeconds: options.spawnIntervalSeconds }
-  return Object.keys(validateOptions(typed)).length === 0 ? typed : DEFAULT_OPTIONS
+  const { sessionSeconds, spawnIntervalSeconds } = stored
+  if (typeof sessionSeconds !== 'number' || typeof spawnIntervalSeconds !== 'number') return DEFAULT_OPTIONS
+  const options: PlayerOptions = { sessionSeconds, spawnIntervalSeconds }
+  return Object.keys(validateOptions(options)).length === 0 ? options : DEFAULT_OPTIONS
 }
 
 export function saveOptions(options: PlayerOptions): boolean {

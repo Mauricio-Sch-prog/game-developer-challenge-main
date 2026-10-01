@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadGameAssets } from '../game/assets'
 import type { GameConfig } from '../game/config'
 import { initialHudState, type GameEngine } from '../game/GameEngine'
 import { GameStore } from '../game/store/GameStore'
 import { GameCanvas } from './GameCanvas'
 import { Hud } from './Hud'
-import { MatchOverlay } from './MatchOverlay'
+import { MatchOverlay, type MatchSummary } from './MatchOverlay'
+import { TouchControls } from './TouchControls'
+import { TOUCH_PORTRAIT_QUERY, TOUCH_QUERY, useMediaQuery } from './useMediaQuery'
 
 type LoadState =
   | { status: 'loading'; progress: number }
@@ -15,17 +17,28 @@ type LoadState =
 interface GameScreenProps {
   config: GameConfig
   seed: number
-  onRestart: () => void
+  /** Called once when the match ends (not when it is abandoned). */
+  onFinish: (summary: MatchSummary) => void
   onExit: () => void
 }
 
 /** Loads the match assets (with progress and retry), then mounts the arena and its UI. */
-export function GameScreen({ config, seed, onRestart, onExit }: GameScreenProps) {
+export function GameScreen({ config, seed, onFinish, onExit }: GameScreenProps) {
   const [load, setLoad] = useState<LoadState>({ status: 'loading', progress: 0 })
   const [attempt, setAttempt] = useState(0)
   // One store and one engine per match (a restart remounts this whole screen).
   const [store] = useState(() => new GameStore(initialHudState(config)))
   const engineRef = useRef<GameEngine | null>(null)
+  const [engineReady, setEngineReady] = useState(false)
+  // Must stay stable: a new function would re-run the canvas effect (new engine).
+  const handleReady = useCallback(() => setEngineReady(true), [])
+  const isTouch = useMediaQuery(TOUCH_QUERY)
+  const isPortrait = useMediaQuery(TOUCH_PORTRAIT_QUERY)
+
+  // Mobile plays in landscape: turning the phone to portrait pauses the match.
+  useEffect(() => {
+    if (engineReady && isPortrait) engineRef.current?.pause()
+  }, [engineReady, isPortrait])
 
   useEffect(() => {
     let cancelled = false
@@ -53,13 +66,15 @@ export function GameScreen({ config, seed, onRestart, onExit }: GameScreenProps)
     <div className="game-screen">
       {load.status === 'ready' && (
         <>
-          <GameCanvas config={config} seed={seed} store={store} engineRef={engineRef} />
+          <GameCanvas config={config} seed={seed} store={store} engineRef={engineRef} onReady={handleReady} />
           <Hud store={store} onPause={() => engineRef.current?.pause()} />
+          {isTouch && <TouchControls onAction={(action, down) => engineRef.current?.setAction(action, down)} />}
           <MatchOverlay
             store={store}
+            rotateHint={isPortrait}
             onResume={() => engineRef.current?.resume()}
-            onRestart={onRestart}
             onExit={onExit}
+            onFinish={onFinish}
           />
         </>
       )}
@@ -74,10 +89,10 @@ export function GameScreen({ config, seed, onRestart, onExit }: GameScreenProps)
       {load.status === 'error' && (
         <div className="overlay" role="alert">
           <p>Could not load the game assets.</p>
-          <button type="button" onClick={retry}>
+          <button type="button" className="btn btn-primary" onClick={retry} autoFocus>
             Retry
           </button>
-          <button type="button" className="secondary" onClick={onExit}>
+          <button type="button" className="btn btn-secondary" onClick={onExit}>
             Main Menu
           </button>
         </div>

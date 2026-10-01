@@ -1,8 +1,10 @@
 :root {
   color-scheme: dark;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-family: system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
   color: #f4e9d2;
   background: #0b2a3a;
+  --gold: #f6d58e;
+  --error: #ffb4a8;
 }
 
 html,
@@ -13,45 +15,265 @@ body,
   overflow: hidden;
 }
 
-button {
+button,
+input {
   font: inherit;
-  padding: 0.6em 1.4em;
-  border-radius: 10px;
-  border: 2px solid #8a5a2b;
-  background: #f1b23c;
-  color: #3a2110;
-  font-weight: 700;
+  color: inherit;
+}
+
+button {
   cursor: pointer;
 }
 
-button:focus-visible {
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+:focus-visible {
   outline: 3px solid #fff;
   outline-offset: 3px;
 }
 
-.menu {
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Screens and panels ---------- */
+
+.screen {
   height: 100%;
-  display: grid;
-  place-content: center;
-  justify-items: center;
-  gap: 1rem;
+  overflow-y: auto;
+  /* margin:auto centering stays scrollable when the panel is taller than the screen. */
+  display: flex;
+  padding: 16px;
+  box-sizing: border-box;
   background: url('/ui_scene_background.png') center / cover;
 }
 
-.menu h1 {
+.screen > * {
+  margin: auto;
+}
+
+/* 9-slice panel: borders from ui_sheet.json (panel_menu → borders). */
+.panel {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  width: min(420px, 100%);
+  box-sizing: border-box;
+  padding: 44px 40px;
+  text-align: center;
+  border-style: solid;
+  border-image-source: url('/png/default/ui/menu/panel_menu.png');
+  border-image-slice: 40 32 fill;
+  border-image-width: 40px 32px;
+}
+
+.panel h1,
+.panel h2 {
   margin: 0;
-  font-size: 3rem;
-  text-shadow: 0 3px 0 #3a2110;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 0 2px 0 rgb(0 0 0 / 50%);
+}
+
+.panel p {
+  margin: 0;
+}
+
+.title {
+  line-height: 0;
+}
+
+.title img {
+  width: min(320px, 100%);
+}
+
+.tagline {
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.hint {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* ---------- Buttons (PNG skins from ui/menu, 256x88) ---------- */
+
+.btn {
+  width: min(240px, 100%);
+  aspect-ratio: 256 / 88;
+  padding: 0;
+  border: none;
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  background: center / 100% 100% no-repeat;
+  /* Makes the focus outline follow the rounded button art. */
+  border-radius: 22px;
+}
+
+.btn-primary {
+  color: #3a2110;
+  background-image: url('/png/default/ui/menu/button_primary_normal.png');
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-image: url('/png/default/ui/menu/button_primary_hover.png');
+}
+
+.btn-primary:active:not(:disabled) {
+  background-image: url('/png/default/ui/menu/button_primary_pressed.png');
+}
+
+.btn-secondary {
+  color: #f4e9d2;
+  background-image: url('/png/default/ui/menu/button_secondary_normal.png');
+}
+
+.btn-secondary:active:not(:disabled) {
+  background-image: url('/png/default/ui/menu/button_secondary_pressed.png');
+}
+
+.round-button {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: url('/png/default/ui/controls/button_round_normal.png') center / contain no-repeat;
+}
+
+.round-button:hover:not(:disabled) {
+  background-image: url('/png/default/ui/controls/button_round_hover.png');
+}
+
+.round-button:active:not(:disabled) {
+  background-image: url('/png/default/ui/controls/button_round_pressed.png');
+}
+
+.round-button img {
+  width: 50%;
+}
+
+/* ---------- Main menu ---------- */
+
+.menu-actions {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  width: 100%;
 }
 
 .controls {
-  list-style: none;
-  padding: 1rem 1.5rem;
-  margin: 0;
-  border-radius: 12px;
-  background: rgb(11 42 58 / 85%);
-  line-height: 1.8;
+  width: 100%;
+  margin-top: 0.5rem;
 }
+
+.controls h2 {
+  font-size: 1rem;
+}
+
+.controls dl {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.controls dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.controls dt {
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.controls dd {
+  margin: 0;
+}
+
+/* ---------- Options ---------- */
+
+.option-field {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  width: 100%;
+}
+
+.option-field label {
+  font-weight: 700;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  font-size: 1.25rem;
+}
+
+.stepper input {
+  width: 4.5ch;
+  padding: 0.2rem;
+  border: 2px solid #8a5a2b;
+  border-radius: 8px;
+  background: #13283a;
+  text-align: center;
+  font-weight: 800;
+}
+
+.stepper input[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+.field-error {
+  color: var(--error);
+  font-size: 0.85rem;
+}
+
+.save-status {
+  min-height: 1.2em;
+  font-size: 0.9rem;
+}
+
+/* ---------- Result ---------- */
+
+.result-score {
+  display: grid;
+  line-height: 1;
+}
+
+.result-score strong {
+  font-size: clamp(3rem, 12vw, 4.5rem);
+  color: var(--gold);
+}
+
+.result-score span,
+.result-meta {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- Game screen ---------- */
 
 .game-screen {
   position: fixed;
@@ -76,73 +298,45 @@ button:focus-visible {
   place-content: center;
   justify-items: center;
   gap: 0.75rem;
+  padding: 16px;
   background: rgb(11 42 58 / 80%);
 }
 
-button.secondary {
-  background: #1d3448;
-  color: #f4e9d2;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.sr-only {
+.banner {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  top: 40%;
+  left: 50%;
+  translate: -50% -50%;
+  padding: 0.5em 1.2em;
+  border-radius: 12px;
+  background: rgb(11 42 58 / 85%);
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 900;
+  color: var(--gold);
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
-/* 9-slice panel: borders from ui_sheet.json (panel_menu → borders). */
-.panel {
-  display: grid;
-  gap: 0.9rem;
-  justify-items: center;
-  min-width: min(300px, 80vw);
-  padding: 44px 40px;
-  text-align: center;
-  border-style: solid;
-  border-image-source: url('/png/default/ui/menu/panel_menu.png');
-  border-image-slice: 40 32 fill;
-  border-image-width: 40px 32px;
-}
+/* ---------- HUD ---------- */
 
-.panel h2 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.panel p {
-  margin: 0;
-}
-
-.panel button {
-  min-width: 200px;
-}
-
-.hint {
-  font-size: 0.85rem;
-  opacity: 0.75;
-}
-
-/* HUD: sits over the canvas; only its buttons take pointer input. */
+/* One top row that wraps on narrow screens (health left, counters right). */
 .hud {
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  /* Keep clear of notches / rounded corners. */
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 0
+    max(12px, env(safe-area-inset-left));
   pointer-events: none;
   font-weight: 800;
   text-shadow: 0 2px 0 rgb(0 0 0 / 60%);
 }
 
 .hud-health {
-  position: absolute;
-  top: 12px;
-  left: 12px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -173,12 +367,10 @@ button:disabled {
 }
 
 .hud-right {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-left: auto;
 }
 
 .hud-counter {
@@ -196,26 +388,94 @@ button:disabled {
   width: clamp(20px, 2.5vw, 32px);
 }
 
-.round-button {
+.hud .round-button {
   width: 56px;
   height: 56px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
   pointer-events: auto;
-  background: url('/png/default/ui/controls/button_round_normal.png') center / contain no-repeat;
 }
 
-.round-button:hover:not(:disabled) {
-  background-image: url('/png/default/ui/controls/button_round_hover.png');
+/* ---------- Touch controls ---------- */
+
+.touch-controls {
+  position: absolute;
+  left: max(12px, env(safe-area-inset-left));
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
 }
 
-.round-button:active:not(:disabled) {
-  background-image: url('/png/default/ui/controls/button_round_pressed.png');
+/* Three buttons: two on the bottom row, the middle one raised (like the reference art). */
+.touch-pad {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: auto auto;
+  column-gap: 4px;
 }
 
-.round-button img {
-  width: 28px;
+.touch-pad .touch-button:nth-child(1) {
+  grid-area: 2 / 1;
+}
+
+.touch-pad .touch-button:nth-child(2) {
+  grid-area: 1 / 2;
+}
+
+.touch-pad .touch-button:nth-child(3) {
+  grid-area: 2 / 3;
+}
+
+.touch-button {
+  width: clamp(52px, 9vmin, 72px);
+  height: clamp(52px, 9vmin, 72px);
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.touch-button img {
+  pointer-events: none;
+}
+
+.rotate-hint {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Phones in landscape are short: tighten panels so dialogs fit without cuts. */
+@media (max-height: 520px) {
+  .panel {
+    gap: 0.5rem;
+    padding: 28px 32px;
+  }
+
+  .btn {
+    width: min(190px, 100%);
+    font-size: 1rem;
+  }
+
+  .overlay {
+    overflow-y: auto;
+  }
+
+  .title img {
+    width: min(240px, 100%);
+  }
+}
+
+/* Short and wide (phone in landscape): menu actions and controls side by side. */
+@media (max-height: 520px) and (min-width: 640px) {
+  .menu-panel {
+    width: min(760px, 100%);
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    column-gap: 2rem;
+  }
+
+  .menu-panel .controls {
+    margin-top: 0;
+  }
 }

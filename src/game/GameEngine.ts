@@ -1,6 +1,6 @@
 import { Application, Container, type Ticker } from 'pixi.js'
 import type { GameConfig } from './config'
-import { InputManager } from './input/InputManager'
+import { InputManager, type Action } from './input/InputManager'
 import { ArenaView } from './render/ArenaView'
 import { EffectsLayer } from './render/EffectsLayer'
 import { EnemyLayer } from './render/EnemyLayer'
@@ -143,6 +143,11 @@ export class GameEngine {
     // Ticker.start() resets its clock, so the paused time is never simulated.
     this.app.ticker.start()
     this.store.update({ status: 'running' })
+  }
+
+  /** Virtual (touch) buttons feed the same input state as the keyboard. */
+  readonly setAction = (action: Action, down: boolean): void => {
+    this.input.setAction(action, down)
   }
 
   private readonly togglePause = (): void => {
