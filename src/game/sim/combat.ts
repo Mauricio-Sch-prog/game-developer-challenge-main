@@ -25,13 +25,13 @@ export function resolveProjectileHits(world: World): void {
       for (const enemy of enemies) {
         if (!enemy.alive || !circlesOverlap(p, enemy)) continue
         p.alive = false
-        world.events.push({ type: 'hit', x: p.x, y: p.y })
+        world.events.push({ type: 'hit', x: p.x, y: p.y, radius: p.radius })
         if (damageShip(world, enemy, p.damage)) world.score += 1
         break
       }
     } else if (player.alive && circlesOverlap(p, player)) {
       p.alive = false
-      world.events.push({ type: 'hit', x: p.x, y: p.y })
+      world.events.push({ type: 'hit', x: p.x, y: p.y, radius: p.radius })
       damageShip(world, player, p.damage)
     }
   }

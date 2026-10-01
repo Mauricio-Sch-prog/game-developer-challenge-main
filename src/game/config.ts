@@ -13,6 +13,8 @@ export interface WeaponConfig {
   projectileSpeed: number
   /** Projectile time to live; range = speed * lifetime. */
   projectileLifetime: number
+  /** Collision radius of the projectile; the sprite is scaled to match. */
+  projectileRadius: number
 }
 
 export interface SideWeaponConfig extends WeaponConfig {
@@ -72,9 +74,6 @@ export interface GameConfig {
     frontCannon: WeaponConfig
     sideCannons: SideWeaponConfig
   }
-  projectile: {
-    radius: number
-  }
   enemies: {
     chaser: ChaserConfig
     shooter: ShooterConfig
@@ -111,27 +110,28 @@ export const DEFAULT_CONFIG: GameConfig = {
   },
   player: {
     maxHp: 100,
-    maxSpeed: 180,
-    acceleration: 240,
+    // Clearly faster than every enemy (Chaser 165, Shooter 110), so outrunning them is a real option.
+    maxSpeed: 210,
+    acceleration: 300,
     turnSpeed: 2.4,
     radius: 28,
+    // Main weapon: heavy shot. One hit sinks a Chaser, two sink a Shooter.
     frontCannon: {
       cooldown: 0.4,
-      damage: 20,
+      damage: 30,
       projectileSpeed: 520,
       projectileLifetime: 1.2,
+      projectileRadius: 9,
     },
     sideCannons: {
       cooldown: 1.5,
       damage: 15,
       projectileSpeed: 460,
       projectileLifetime: 0.9,
+      projectileRadius: 5,
       count: 3,
       spacing: 22,
     },
-  },
-  projectile: {
-    radius: 5,
   },
   enemies: {
     chaser: {
@@ -156,6 +156,7 @@ export const DEFAULT_CONFIG: GameConfig = {
         damage: 8,
         projectileSpeed: 380,
         projectileLifetime: 1.3,
+        projectileRadius: 5,
       },
     },
   },

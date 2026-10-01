@@ -9,6 +9,8 @@ export class ProjectileLayer extends Container {
   private readonly active = new Map<Projectile, Sprite>()
   private readonly pool: Sprite[] = []
   private readonly texture = Texture.from('cannon_ball')
+  /** The cannon_ball art is drawn at this radius (10x10 px). */
+  private readonly textureRadius = this.texture.width / 2
 
   sync(projectiles: readonly Projectile[]): void {
     // Release sprites of projectiles the simulation killed this step.
@@ -24,6 +26,8 @@ export class ProjectileLayer extends Container {
       let sprite = this.active.get(projectile)
       if (!sprite) {
         sprite = this.acquire()
+        // Pooled sprites may come from a different weapon: match this projectile's size.
+        sprite.scale.set(projectile.radius / this.textureRadius)
         this.active.set(projectile, sprite)
       }
       sprite.position.set(projectile.x, projectile.y)

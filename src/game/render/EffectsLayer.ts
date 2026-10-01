@@ -12,6 +12,9 @@ interface VisualEffect {
 
 const lerp = (from: number, to: number, t: number): number => from + (to - from) * t
 
+/** Projectile radius the flash sizes below were tuned for; bigger shots get bigger flashes. */
+const BASE_PROJECTILE_RADIUS = 5
+
 /**
  * Short-lived visual feedback (muzzle flash, splash, hits, explosions).
  * Purely cosmetic: it reacts to simulation events and never affects the rules.
@@ -27,7 +30,7 @@ export class EffectsLayer extends Container {
   spawn(event: GameEvent): void {
     switch (event.type) {
       case 'shot':
-        this.addFlash(event.x, event.y, 0.3, 0.55, 0.18)
+        this.addFlash(event.x, event.y, 0.3, 0.55, 0.18, event.radius / BASE_PROJECTILE_RADIUS)
         break
       case 'impact':
         this.addFlash(event.x, event.y, 0.4, 0.7, 0.3)
@@ -36,7 +39,7 @@ export class EffectsLayer extends Container {
         this.addSplash(event.x, event.y)
         break
       case 'hit':
-        this.addFlash(event.x, event.y, 0.45, 0.8, 0.25)
+        this.addFlash(event.x, event.y, 0.45, 0.8, 0.25, event.radius / BASE_PROJECTILE_RADIUS)
         break
       case 'destroyed':
         // The player's own view turns into the wreck; enemy views are removed.
@@ -67,13 +70,13 @@ export class EffectsLayer extends Container {
     this.ring.destroy()
   }
 
-  private addFlash(x: number, y: number, fromScale: number, toScale: number, duration: number): void {
+  private addFlash(x: number, y: number, fromScale: number, toScale: number, duration: number, size = 1): void {
     const flash = new Sprite(Texture.from('explosion_3'))
     flash.anchor.set(0.5)
     flash.position.set(x, y)
     flash.rotation = Math.random() * Math.PI * 2
     this.add(flash, duration, (t) => {
-      flash.scale.set(lerp(fromScale, toScale, t))
+      flash.scale.set(lerp(fromScale, toScale, t) * size)
       flash.alpha = 1 - t
     })
   }

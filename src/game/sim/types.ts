@@ -73,10 +73,10 @@ export type EndReason = 'time' | 'death'
  * into visual effects (and later sounds); the simulation never draws.
  */
 export type GameEvent =
-  | { type: 'shot'; x: number; y: number; angle: number }
+  | { type: 'shot'; x: number; y: number; angle: number; radius: number }
   | { type: 'splash'; x: number; y: number }
   | { type: 'impact'; x: number; y: number }
-  | { type: 'hit'; x: number; y: number }
+  | { type: 'hit'; x: number; y: number; radius: number }
   | { type: 'destroyed'; kind: ShipKind; x: number; y: number; angle: number }
 
 export interface World {

@@ -12,12 +12,12 @@ function spawnProjectile(world: World, team: Team, x: number, y: number, angle: 
     y,
     vx: Math.cos(angle) * weapon.projectileSpeed,
     vy: Math.sin(angle) * weapon.projectileSpeed,
-    radius: world.config.projectile.radius,
+    radius: weapon.projectileRadius,
     damage: weapon.damage,
     ttl: weapon.projectileLifetime,
     alive: true,
   })
-  world.events.push({ type: 'shot', x, y, angle })
+  world.events.push({ type: 'shot', x, y, angle, radius: weapon.projectileRadius })
 }
 
 /** One projectile from the bow, in the heading direction. */
