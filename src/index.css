@@ -403,7 +403,33 @@ button:disabled {
   bottom: max(12px, env(safe-area-inset-bottom));
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   pointer-events: none;
+}
+
+/* Joystick: translucent base, brass rim, round knob that follows the thumb. */
+.joystick {
+  width: clamp(140px, 38vmin, 180px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 4px solid rgb(201 145 70 / 85%);
+  background: radial-gradient(circle, rgb(11 42 58 / 25%) 0 55%, rgb(11 42 58 / 55%) 100%);
+  box-shadow: inset 0 0 0 3px rgb(0 0 0 / 25%);
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.joystick-knob {
+  width: 40%;
+  aspect-ratio: 1;
+  background: url('/png/retina/ui/controls/button_round_normal.png') center / contain no-repeat;
+  pointer-events: none;
+  will-change: transform;
 }
 
 /* Three buttons: two on the bottom row, the middle one raised (like the reference art). */
@@ -426,9 +452,18 @@ button:disabled {
   grid-area: 2 / 3;
 }
 
+.touch-button,
+.touch-button:hover:not(:disabled) {
+  background-image: url('/png/retina/ui/controls/button_round_normal.png');
+}
+
+.touch-button:active:not(:disabled) {
+  background-image: url('/png/retina/ui/controls/button_round_pressed.png');
+}
+
 .touch-button {
-  width: clamp(52px, 9vmin, 72px);
-  height: clamp(52px, 9vmin, 72px);
+  width: clamp(72px, 21vmin, 96px);
+  height: clamp(72px, 21vmin, 96px);
   pointer-events: auto;
   touch-action: none;
   user-select: none;
@@ -437,6 +472,7 @@ button:disabled {
 }
 
 .touch-button img {
+  width: 55%;
   pointer-events: none;
 }
 

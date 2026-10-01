@@ -2,7 +2,7 @@ import type { GameConfig } from '../config'
 import { updateEnemies } from './ai'
 import { islandHitbox } from './arena'
 import { resolveProjectileHits, resolveShipContacts } from './combat'
-import { moveShip, resolveShipObstacles } from './movement'
+import { moveShip, resolveShipObstacles, steerTowards } from './movement'
 import { removeDead, updateProjectiles } from './projectiles'
 import { createRandom } from './random'
 import { updateSpawner } from './spawner'
@@ -65,7 +65,10 @@ export function updateWorld(world: World, intent: PlayerIntent, dt: number): voi
   const { player } = world
 
   // 1. Movement (player input, enemy AI), then ship collisions.
-  moveShip(player, world.config.player, intent.thrust ? 1 : 0, intent.turn, step)
+  const stats = world.config.player
+  // Joystick: steer towards an absolute direction. Keyboard: turn left/right.
+  const turn = intent.heading === null ? intent.turn : steerTowards(player, stats, intent.heading, step)
+  moveShip(player, stats, intent.thrust, turn, step)
   updateEnemies(world, step)
   resolveShipContacts(world)
   resolveShipObstacles(player, world)

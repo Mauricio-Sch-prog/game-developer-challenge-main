@@ -39,7 +39,7 @@ export function MainMenu({ onPlay, onOptions }: MainMenuProps) {
               </div>
             ))}
           </dl>
-          <p className="hint">On touch screens, play in landscape with the on-screen buttons.</p>
+          <p className="hint">On touch screens, play in landscape: drag the joystick to sail, tap the buttons to fire.</p>
         </section>
       </div>
     </main>

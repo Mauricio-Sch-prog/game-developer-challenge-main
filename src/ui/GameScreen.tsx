@@ -68,7 +68,12 @@ export function GameScreen({ config, seed, onFinish, onExit }: GameScreenProps) 
         <>
           <GameCanvas config={config} seed={seed} store={store} engineRef={engineRef} onReady={handleReady} />
           <Hud store={store} onPause={() => engineRef.current?.pause()} />
-          {isTouch && <TouchControls onAction={(action, down) => engineRef.current?.setAction(action, down)} />}
+          {isTouch && (
+            <TouchControls
+              onAction={(action, down) => engineRef.current?.setAction(action, down)}
+              onSteer={(steering) => engineRef.current?.setSteering(steering)}
+            />
+          )}
           <MatchOverlay
             store={store}
             rotateHint={isPortrait}

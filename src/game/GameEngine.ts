@@ -1,6 +1,6 @@
 import { Application, Container, type Ticker } from 'pixi.js'
 import type { GameConfig } from './config'
-import { InputManager, type Action } from './input/InputManager'
+import { InputManager, type Action, type Steering } from './input/InputManager'
 import { ArenaView } from './render/ArenaView'
 import { EffectsLayer } from './render/EffectsLayer'
 import { EnemyLayer } from './render/EnemyLayer'
@@ -148,6 +148,11 @@ export class GameEngine {
   /** Virtual (touch) buttons feed the same input state as the keyboard. */
   readonly setAction = (action: Action, down: boolean): void => {
     this.input.setAction(action, down)
+  }
+
+  /** Touch joystick → steering direction and thrust (null when released). */
+  readonly setSteering = (steering: Steering | null): void => {
+    this.input.setSteering(steering)
   }
 
   private readonly togglePause = (): void => {

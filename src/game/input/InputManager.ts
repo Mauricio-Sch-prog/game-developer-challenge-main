@@ -17,6 +17,12 @@ export const KEY_BINDINGS: Readonly<Record<string, Action>> = {
 
 const PAUSE_KEYS: ReadonlySet<string> = new Set(['Escape', 'KeyP'])
 
+/** Touch joystick state: where to go (radians, screen = world orientation) and how fast (0..1). */
+export interface Steering {
+  heading: number
+  thrust: number
+}
+
 /**
  * Translates keyboard (and later touch) input into a `PlayerIntent`.
  * Listeners are only attached while a match is mounted, so game keys are
@@ -29,6 +35,7 @@ export class InputManager {
    * two frames is still seen once, so quick taps are never lost.
    */
   private readonly tapped = new Set<Action>()
+  private steering: Steering | null = null
   private target: Window | null = null
   private enabled = true
 
@@ -62,6 +69,11 @@ export class InputManager {
     this.clear()
   }
 
+  /** Touch joystick. `null` when the finger is lifted. */
+  setSteering(steering: Steering | null): void {
+    this.steering = this.enabled ? steering : null
+  }
+
   /** Entry point for virtual buttons; goes through the same state as the keyboard. */
   setAction(action: Action, down: boolean): void {
     if (down) this.press(action)
@@ -74,8 +86,9 @@ export class InputManager {
     const left = active('turnLeft')
     const right = active('turnRight')
     const intent: PlayerIntent = {
-      thrust: active('forward'),
+      thrust: Math.max(active('forward') ? 1 : 0, this.steering?.thrust ?? 0),
       turn: left === right ? 0 : left ? -1 : 1,
+      heading: this.steering?.heading ?? null,
       fireFront: active('fireFront'),
       fireLeft: active('fireLeft'),
       fireRight: active('fireRight'),
@@ -93,6 +106,7 @@ export class InputManager {
   private clear(): void {
     this.held.clear()
     this.tapped.clear()
+    this.steering = null
   }
 
   private readonly handleKeyDown = (event: KeyboardEvent): void => {

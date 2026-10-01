@@ -57,9 +57,12 @@ export interface WeaponCooldowns {
 
 /** What the player wants to do this frame, already decoupled from keyboard/touch. */
 export interface PlayerIntent {
-  thrust: boolean
-  /** -1 = turn left (counter-clockwise), 1 = turn right, 0 = keep heading. */
-  turn: -1 | 0 | 1
+  /** 0 = no thrust, 1 = full speed (analog with the touch joystick). */
+  thrust: number
+  /** -1 = turn left (counter-clockwise), 1 = turn right, 0 = keep heading. Ignored when `heading` is set. */
+  turn: number
+  /** Absolute direction to steer towards (touch joystick), in radians. null = steer with `turn`. */
+  heading: number | null
   fireFront: boolean
   fireLeft: boolean
   fireRight: boolean

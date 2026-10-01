@@ -1,7 +1,6 @@
-import type { ShipStats } from '../config'
 import { circleIntersectsRect } from './collision'
-import { clamp, wrapAngle } from './math'
-import { moveShip } from './movement'
+import { wrapAngle } from './math'
+import { moveShip, steerTowards } from './movement'
 import type { Enemy, Ship, World } from './types'
 import { fireFront } from './weapons'
 
@@ -14,15 +13,6 @@ function angleTo(from: Ship, to: Ship): number {
 
 function distance(a: Ship, b: Ship): number {
   return Math.hypot(b.x - a.x, b.y - a.y)
-}
-
-/**
- * Proportional steering: turns at full speed when far from the target angle
- * and slows down near it, so the ship settles instead of wobbling.
- */
-function turnTowards(ship: Ship, stats: ShipStats, targetAngle: number, dt: number): number {
-  const diff = wrapAngle(targetAngle - ship.angle)
-  return clamp(diff / (stats.turnSpeed * dt), -1, 1)
 }
 
 /**
@@ -54,7 +44,7 @@ function updateChaser(enemy: Enemy, world: World, dt: number): void {
   let target = angleTo(enemy, player)
   // Close to the player it goes straight in, even along an island edge.
   if (distance(enemy, player) > PROBE_DISTANCE) target = avoidIslands(enemy, world, target)
-  moveShip(enemy, stats, 1, turnTowards(enemy, stats, target, dt), dt)
+  moveShip(enemy, stats, 1, steerTowards(enemy, stats, target, dt), dt)
 }
 
 /** Shooter: approaches until `preferredDistance`, aims with the bow, fires in range. */
@@ -65,7 +55,7 @@ function updateShooter(enemy: Enemy, world: World, dt: number): void {
   const aim = angleTo(enemy, player)
   const thrust = dist > stats.preferredDistance ? 1 : 0
   const target = thrust ? avoidIslands(enemy, world, aim) : aim
-  moveShip(enemy, stats, thrust, turnTowards(enemy, stats, target, dt), dt)
+  moveShip(enemy, stats, thrust, steerTowards(enemy, stats, target, dt), dt)
 
   enemy.fireCooldown = Math.max(0, enemy.fireCooldown - dt)
   const aimError = Math.abs(wrapAngle(aim - enemy.angle))
