@@ -1,11 +1,19 @@
 import type { SideWeaponConfig, WeaponConfig } from '../config'
-import type { PlayerIntent, Ship, Team, World } from './types'
+import type { PlayerIntent, Ship, Team, WeaponKind, World } from './types'
 
 /** Muzzle positions relative to the ship center, matching the scaled ship art. */
 const BOW_OFFSET = 42
 const SIDE_OFFSET = 22
 
-function spawnProjectile(world: World, team: Team, x: number, y: number, angle: number, weapon: WeaponConfig): void {
+function spawnProjectile(
+  world: World,
+  team: Team,
+  kind: WeaponKind,
+  x: number,
+  y: number,
+  angle: number,
+  weapon: WeaponConfig,
+): void {
   world.projectiles.push({
     team,
     x,
@@ -17,14 +25,14 @@ function spawnProjectile(world: World, team: Team, x: number, y: number, angle: 
     ttl: weapon.projectileLifetime,
     alive: true,
   })
-  world.events.push({ type: 'shot', x, y, angle, radius: weapon.projectileRadius })
+  world.events.push({ type: 'shot', team, weapon: kind, x, y, angle, radius: weapon.projectileRadius })
 }
 
 /** One projectile from the bow, in the heading direction. */
 export function fireFront(world: World, ship: Ship, weapon: WeaponConfig, team: Team): void {
   const x = ship.x + Math.cos(ship.angle) * BOW_OFFSET
   const y = ship.y + Math.sin(ship.angle) * BOW_OFFSET
-  spawnProjectile(world, team, x, y, ship.angle, weapon)
+  spawnProjectile(world, team, 'front', x, y, ship.angle, weapon)
 }
 
 /**
@@ -43,7 +51,7 @@ export function fireBroadside(world: World, ship: Ship, weapon: SideWeaponConfig
     const along = (i - (weapon.count - 1) / 2) * weapon.spacing
     const x = ship.x + forwardX * along + sideX * SIDE_OFFSET
     const y = ship.y + forwardY * along + sideY * SIDE_OFFSET
-    spawnProjectile(world, team, x, y, angle, weapon)
+    spawnProjectile(world, team, 'broadside', x, y, angle, weapon)
   }
 }
 

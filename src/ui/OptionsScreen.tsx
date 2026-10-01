@@ -1,4 +1,5 @@
 import { useRef, useState, type FormEvent } from 'react'
+import { loadSoundEnabled, playSound, setSoundEnabled } from '../audio/sounds'
 import {
   loadOptions,
   OPTION_LIMITS,
@@ -27,6 +28,7 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
     return { sessionSeconds: String(saved.sessionSeconds), spawnIntervalSeconds: String(saved.spawnIntervalSeconds) }
   })
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'failed'>('idle')
+  const [soundOn, setSoundOn] = useState(loadSoundEnabled)
   const inputRefs = useRef<Partial<Record<OptionKey, HTMLInputElement | null>>>({})
 
   const parsed: PlayerOptions = {
@@ -45,6 +47,13 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
     const current = Number.isFinite(parsed[key]) ? parsed[key] : min
     const next = Math.min(max, Math.max(min, Math.round((current + direction * size) * 100) / 100))
     setValue(key, String(next))
+  }
+
+  /** Sound applies (and is saved) immediately, so the player hears the change. */
+  const toggleSound = (enabled: boolean) => {
+    setSoundEnabled(enabled)
+    setSoundOn(enabled)
+    if (enabled) playSound('ui_click', { volume: 0.5 })
   }
 
   const submit = (event: FormEvent) => {
@@ -116,6 +125,11 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
           )
         })}
 
+        <label className="toggle">
+          <input type="checkbox" checked={soundOn} onChange={(event) => toggleSound(event.target.checked)} />
+          Sound effects and music
+        </label>
+
         <p className="save-status" role="status">
           {saveStatus === 'saved' && 'Options saved. They apply to your next match.'}
           {saveStatus === 'failed' && 'Could not save on this device (storage unavailable).'}
@@ -124,7 +138,7 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
         <button type="submit" className="btn btn-primary">
           Save
         </button>
-        <button type="button" className="btn btn-secondary" onClick={onBack}>
+        <button type="button" className="btn btn-secondary" onClick={onBack} data-sound="close">
           Main Menu
         </button>
       </form>

@@ -133,6 +133,8 @@ export function TouchControls({ onAction, onSteer }: TouchControlsProps) {
         aria-label={label}
         // Keyboard players already have keys; keep these out of the tab order.
         tabIndex={-1}
+        // Firing already has its cannon sound.
+        data-sound="none"
         onPointerDown={press}
         onPointerUp={release}
         onPointerCancel={release}

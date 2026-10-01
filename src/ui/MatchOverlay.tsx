@@ -36,10 +36,11 @@ export function MatchOverlay({ store, rotateHint, onResume, onExit, onFinish }: 
         <div className="panel">
           <h2 id="pause-title">Paused</h2>
           {rotateHint && <p className="rotate-hint">Rotate your device to landscape to play.</p>}
-          <button type="button" className="btn btn-primary" onClick={onResume} autoFocus>
+          {/* The game plays its own resume sound. */}
+          <button type="button" className="btn btn-primary" onClick={onResume} autoFocus data-sound="none">
             Resume
           </button>
-          <button type="button" className="btn btn-secondary" onClick={onExit}>
+          <button type="button" className="btn btn-secondary" onClick={onExit} data-sound="back">
             Main Menu
           </button>
           <p className="hint">Press Esc or P to resume. Leaving ends this match without saving it.</p>

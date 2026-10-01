@@ -75,12 +75,16 @@ export type EndReason = 'time' | 'death'
  * One-shot things that happened during a step. The render layer turns them
  * into visual effects (and later sounds); the simulation never draws.
  */
+export type WeaponKind = 'front' | 'broadside'
+
 export type GameEvent =
-  | { type: 'shot'; x: number; y: number; angle: number; radius: number }
+  | { type: 'shot'; team: Team; weapon: WeaponKind; x: number; y: number; angle: number; radius: number }
   | { type: 'splash'; x: number; y: number }
   | { type: 'impact'; x: number; y: number }
   | { type: 'hit'; x: number; y: number; radius: number }
-  | { type: 'destroyed'; kind: ShipKind; x: number; y: number; angle: number }
+  | { type: 'destroyed'; kind: ShipKind; x: number; y: number; angle: number; scored: boolean }
+  /** A Chaser rammed the player (its explosion is a separate `destroyed`). */
+  | { type: 'ram'; x: number; y: number }
 
 export interface World {
   /** Snapshot of the configuration taken when the match started. */

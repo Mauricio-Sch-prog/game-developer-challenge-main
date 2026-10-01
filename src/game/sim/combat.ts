@@ -1,13 +1,17 @@
 import { circlesOverlap, separateCircles } from './collision'
 import type { Ship, World } from './types'
 
-/** Applies damage; returns true when this hit destroyed the ship. */
-function damageShip(world: World, ship: Ship, amount: number): boolean {
+/**
+ * Applies damage; returns true when this hit destroyed the ship.
+ * `scores` is true only for player shots hitting enemies.
+ */
+function damageShip(world: World, ship: Ship, amount: number, scores: boolean): boolean {
   if (!ship.alive) return false
   ship.hp = Math.max(0, ship.hp - amount)
   if (ship.hp > 0) return false
   ship.alive = false
-  world.events.push({ type: 'destroyed', kind: ship.kind, x: ship.x, y: ship.y, angle: ship.angle })
+  if (scores) world.score += 1
+  world.events.push({ type: 'destroyed', kind: ship.kind, x: ship.x, y: ship.y, angle: ship.angle, scored: scores })
   return true
 }
 
@@ -26,13 +30,13 @@ export function resolveProjectileHits(world: World): void {
         if (!enemy.alive || !circlesOverlap(p, enemy)) continue
         p.alive = false
         world.events.push({ type: 'hit', x: p.x, y: p.y, radius: p.radius })
-        if (damageShip(world, enemy, p.damage)) world.score += 1
+        damageShip(world, enemy, p.damage, true)
         break
       }
     } else if (player.alive && circlesOverlap(p, player)) {
       p.alive = false
       world.events.push({ type: 'hit', x: p.x, y: p.y, radius: p.radius })
-      damageShip(world, player, p.damage)
+      damageShip(world, player, p.damage, false)
     }
   }
 }
@@ -50,8 +54,9 @@ export function resolveShipContacts(world: World): void {
     if (enemy.kind === 'chaser') {
       // Self-destruction: bypasses damageShip so it never counts as a kill.
       enemy.alive = false
-      world.events.push({ type: 'destroyed', kind: enemy.kind, x: enemy.x, y: enemy.y, angle: enemy.angle })
-      damageShip(world, player, contactDamage)
+      world.events.push({ type: 'ram', x: enemy.x, y: enemy.y })
+      world.events.push({ type: 'destroyed', kind: enemy.kind, x: enemy.x, y: enemy.y, angle: enemy.angle, scored: false })
+      damageShip(world, player, contactDamage, false)
     } else {
       separateCircles(enemy, player, 0.7)
     }

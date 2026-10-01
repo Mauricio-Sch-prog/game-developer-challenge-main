@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useUiSounds } from './audio/useUiSounds'
 import type { GameConfig } from './game/config'
 import { loadLastResult, saveLastResult, type MatchResult } from './settings/lastResult'
 import { buildMatchConfig, loadOptions, type PlayerOptions } from './settings/options'
@@ -48,6 +49,7 @@ function newMatch(): Match {
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>(initialScreen)
+  useUiSounds()
 
   const goTo = useCallback((next: Screen) => {
     writeSessionFlag(SHOWING_RESULT_KEY, next.name === 'result')

@@ -97,7 +97,7 @@ export function GameScreen({ config, seed, onFinish, onExit }: GameScreenProps) 
           <button type="button" className="btn btn-primary" onClick={retry} autoFocus>
             Retry
           </button>
-          <button type="button" className="btn btn-secondary" onClick={onExit}>
+          <button type="button" className="btn btn-secondary" onClick={onExit} data-sound="back">
             Main Menu
           </button>
         </div>

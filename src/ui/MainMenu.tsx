@@ -24,7 +24,7 @@ export function MainMenu({ onPlay, onOptions }: MainMenuProps) {
           <button type="button" className="btn btn-primary" onClick={onPlay} autoFocus>
             Play
           </button>
-          <button type="button" className="btn btn-primary" onClick={onOptions}>
+          <button type="button" className="btn btn-primary" onClick={onOptions} data-sound="open">
             Options
           </button>
         </div>

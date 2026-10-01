@@ -1,4 +1,5 @@
 import { Application, Container, type Ticker } from 'pixi.js'
+import { GameAudio } from './audio/GameAudio'
 import type { GameConfig } from './config'
 import { InputManager, type Action, type Steering } from './input/InputManager'
 import { ArenaView } from './render/ArenaView'
@@ -46,6 +47,9 @@ export class GameEngine {
   private readonly store: GameStore
   private readonly world: World
   private readonly input = new InputManager()
+  private readonly audio = new GameAudio()
+  /** The end-of-match sound plays once, on the frame the match ends. */
+  private endHandled = false
   /** Everything in world coordinates; scaled to fit the screen. */
   private readonly worldLayer = new Container()
   private app: Application | null = null
@@ -94,6 +98,7 @@ export class GameEngine {
     window.addEventListener('blur', this.pause)
     document.addEventListener('visibilitychange', this.handleVisibilityChange)
     app.ticker.add(this.tick)
+    this.audio.start()
 
     if (testHooksEnabled()) {
       this.testHooks = { getWorld: () => this.world }
@@ -105,6 +110,7 @@ export class GameEngine {
     if (this.destroyed) return
     this.destroyed = true
     this.input.detach()
+    this.audio.destroy()
     window.removeEventListener('blur', this.pause)
     document.removeEventListener('visibilitychange', this.handleVisibilityChange)
     if (this.testHooks && window.__PIRATE_BATTLE__ === this.testHooks) delete window.__PIRATE_BATTLE__
@@ -132,6 +138,7 @@ export class GameEngine {
     this.paused = true
     this.app.ticker.stop()
     this.input.setEnabled(false)
+    this.audio.pause()
     this.store.update({ status: 'paused' })
   }
 
@@ -142,6 +149,7 @@ export class GameEngine {
     this.input.setEnabled(true)
     // Ticker.start() resets its clock, so the paused time is never simulated.
     this.app.ticker.start()
+    this.audio.resume()
     this.store.update({ status: 'running' })
   }
 
@@ -192,12 +200,20 @@ export class GameEngine {
       const step = Math.min(remaining, MAX_STEP)
       updateWorld(this.world, intent, step)
       // Events only live for one step, so consume them right away.
-      for (const event of this.world.events) this.effectsLayer?.spawn(event)
+      for (const event of this.world.events) {
+        this.effectsLayer?.spawn(event)
+        this.audio.handle(event)
+      }
       remaining -= step
     }
 
     // Release the keyboard for the end-of-match dialog.
-    if (this.world.status === 'over') this.input.setEnabled(false)
+    if (this.world.status === 'over' && !this.endHandled) {
+      this.endHandled = true
+      this.input.setEnabled(false)
+      if (this.world.endReason) this.audio.end(this.world.endReason)
+    }
+    this.audio.update(this.world)
 
     this.effectsLayer?.update(frameTime)
     this.syncViews(frameTime)

@@ -73,6 +73,7 @@ export function Hud({ store, onPause }: HudProps) {
           onClick={handlePause}
           disabled={status !== 'running'}
           aria-label="Pause"
+          data-sound="none"
         >
           <img src={`${CONTROLS}/icon_pause.png`} alt="" />
         </button>

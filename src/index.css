@@ -248,6 +248,21 @@ button:disabled {
   font-size: 0.85rem;
 }
 
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 1.3rem;
+  height: 1.3rem;
+  accent-color: #f1b23c;
+  cursor: pointer;
+}
+
 .save-status {
   min-height: 1.2em;
   font-size: 0.9rem;
