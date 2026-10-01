@@ -3,6 +3,8 @@ import { isRecord, readJson, writeJson } from '../storage'
 import type { PlayerOptions } from './options'
 
 export interface MatchResult {
+  /** Same id as the API record: links this result to its registration status. */
+  matchId: string
   score: number
   /** Seconds of active play (pauses excluded). */
   timePlayed: number
@@ -18,6 +20,7 @@ const STORAGE_KEY = 'pirate-battle:last-result'
 function isMatchResult(value: unknown): value is MatchResult {
   return (
     isRecord(value) &&
+    typeof value.matchId === 'string' &&
     typeof value.score === 'number' &&
     typeof value.timePlayed === 'number' &&
     (value.endReason === 'time' || value.endReason === 'death') &&

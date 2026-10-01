@@ -1,5 +1,10 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useRef, useState, type FormEvent } from 'react'
+import { pendingMatches } from '../api/pendingMatches'
+import { recordKeys } from '../api/queries'
 import { loadSoundEnabled, playSound, setSoundEnabled } from '../audio/sounds'
+import { resetDb } from '../mocks/db'
+import { getScenario, isScenarioId, resetScenario, SCENARIOS, setScenario, type ScenarioId } from '../mocks/scenarios'
 import {
   loadOptions,
   OPTION_LIMITS,
@@ -7,6 +12,7 @@ import {
   validateOptions,
   type PlayerOptions,
 } from '../settings/options'
+import { loadPlayer, PLAYER_NAME_LIMITS, savePlayerName, validatePlayerName } from '../settings/player'
 
 type OptionKey = keyof PlayerOptions
 
@@ -29,6 +35,8 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
   })
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'failed'>('idle')
   const [soundOn, setSoundOn] = useState(loadSoundEnabled)
+  const [name, setName] = useState(() => loadPlayer().name)
+  const nameRef = useRef<HTMLInputElement>(null)
   const inputRefs = useRef<Partial<Record<OptionKey, HTMLInputElement | null>>>({})
 
   const parsed: PlayerOptions = {
@@ -36,6 +44,7 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
     spawnIntervalSeconds: values.spawnIntervalSeconds.trim() === '' ? NaN : Number(values.spawnIntervalSeconds),
   }
   const errors = validateOptions(parsed)
+  const nameError = validatePlayerName(name)
 
   const setValue = (key: OptionKey, value: string) => {
     setValues((current) => ({ ...current, [key]: value }))
@@ -58,18 +67,50 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
 
   const submit = (event: FormEvent) => {
     event.preventDefault()
+    if (nameError) {
+      nameRef.current?.focus()
+      return
+    }
     const firstInvalid = FIELDS.find(({ key }) => errors[key])
     if (firstInvalid) {
       inputRefs.current[firstInvalid.key]?.focus()
       return
     }
-    setSaveStatus(saveOptions(parsed) ? 'saved' : 'failed')
+    const saved = saveOptions(parsed) && savePlayerName(name)
+    setSaveStatus(saved ? 'saved' : 'failed')
   }
 
   return (
     <main className="screen">
       <form className="panel" onSubmit={submit} noValidate>
         <h1>Options</h1>
+
+        <div className="option-field">
+          <label htmlFor="player-name">Captain name</label>
+          <input
+            ref={nameRef}
+            id="player-name"
+            className="text-input"
+            type="text"
+            autoComplete="nickname"
+            maxLength={PLAYER_NAME_LIMITS.max + 10}
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+              setSaveStatus('idle')
+            }}
+            aria-invalid={nameError ? true : undefined}
+            aria-describedby={nameError ? 'player-name-hint player-name-error' : 'player-name-hint'}
+          />
+          <p id="player-name-hint" className="hint">
+            Shown in the ranking ({PLAYER_NAME_LIMITS.min}–{PLAYER_NAME_LIMITS.max} characters)
+          </p>
+          {nameError && (
+            <p id="player-name-error" className="field-error">
+              {nameError}
+            </p>
+          )}
+        </div>
 
         {FIELDS.map(({ key, label }) => {
           const { min, max, step: size } = OPTION_LIMITS[key]
@@ -141,7 +182,67 @@ export function OptionsScreen({ onBack }: OptionsScreenProps) {
         <button type="button" className="btn btn-secondary" onClick={onBack} data-sound="close">
           Main Menu
         </button>
+
+        <MockApiPanel />
       </form>
     </main>
+  )
+}
+
+/**
+ * Picks the network scenario simulated by the mock API (MSW) and restores its
+ * initial data. Part of the demo: lets reviewers reproduce every failure case.
+ */
+function MockApiPanel() {
+  const queryClient = useQueryClient()
+  const [scenario, setScenarioState] = useState<ScenarioId>(getScenario)
+  const [message, setMessage] = useState('')
+
+  const change = (id: ScenarioId) => {
+    setScenario(id)
+    setScenarioState(id)
+    setMessage('')
+    // A recovered network should send what is still pending and refresh the lists.
+    pendingMatches.retryFailed()
+    void queryClient.invalidateQueries({ queryKey: recordKeys.all })
+  }
+
+  const reset = () => {
+    resetDb()
+    resetScenario()
+    setScenarioState('success')
+    queryClient.removeQueries({ queryKey: recordKeys.all })
+    pendingMatches.retryFailed()
+    setMessage('Mock data and network restored to their initial state.')
+  }
+
+  return (
+    <fieldset className="mock-panel">
+      <legend>Network simulation (mock API)</legend>
+      <label htmlFor="mock-scenario">Scenario</label>
+      <select
+        id="mock-scenario"
+        value={scenario}
+        onChange={(event) => {
+          if (isScenarioId(event.target.value)) change(event.target.value)
+        }}
+        aria-describedby="mock-scenario-hint"
+      >
+        {Object.entries(SCENARIOS).map(([id, { label }]) => (
+          <option key={id} value={id}>
+            {label}
+          </option>
+        ))}
+      </select>
+      <p id="mock-scenario-hint" className="hint">
+        {SCENARIOS[scenario].description}
+      </p>
+      <button type="button" className="link-button" onClick={reset}>
+        Reset mock data
+      </button>
+      <p className="save-status" role="status">
+        {message}
+      </p>
+    </fieldset>
   )
 }

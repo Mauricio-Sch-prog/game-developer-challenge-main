@@ -1,13 +1,18 @@
 import { useCallback, useState } from 'react'
+import type { MatchRecord } from './api/contracts'
+import { pendingMatches } from './api/pendingMatches'
+import { useMatchSync } from './api/useMatchSync'
 import { useUiSounds } from './audio/useUiSounds'
 import type { GameConfig } from './game/config'
 import { loadLastResult, saveLastResult, type MatchResult } from './settings/lastResult'
 import { buildMatchConfig, loadOptions, type PlayerOptions } from './settings/options'
+import { loadPlayer } from './settings/player'
 import { readSessionFlag, writeSessionFlag } from './storage'
 import { GameScreen } from './ui/GameScreen'
 import { MainMenu } from './ui/MainMenu'
 import type { MatchSummary } from './ui/MatchOverlay'
 import { OptionsScreen } from './ui/OptionsScreen'
+import { RecordsScreen, type RecordsTab } from './ui/RecordsScreen'
 import { ResultScreen } from './ui/ResultScreen'
 
 interface Match {
@@ -24,6 +29,7 @@ type Screen =
   | { name: 'options' }
   | { name: 'play'; match: Match }
   | { name: 'result'; result: MatchResult }
+  | { name: 'records'; tab: RecordsTab }
 
 const SHOWING_RESULT_KEY = 'pirate-battle:showing-result'
 
@@ -50,6 +56,8 @@ function newMatch(): Match {
 export default function App() {
   const [screen, setScreen] = useState<Screen>(initialScreen)
   useUiSounds()
+  // Sends finished matches to the API in the background, on every screen.
+  useMatchSync()
 
   const goTo = useCallback((next: Screen) => {
     writeSessionFlag(SHOWING_RESULT_KEY, next.name === 'result')
@@ -63,7 +71,21 @@ export default function App() {
   const finish = useCallback(
     (summary: MatchSummary) => {
       if (!match) return
-      const result: MatchResult = { ...summary, finishedAt: new Date().toISOString(), options: match.options }
+      const finishedAt = new Date().toISOString()
+      const player = loadPlayer()
+      const record: MatchRecord = {
+        matchId: match.id,
+        playerId: player.id,
+        playerName: player.name,
+        finishedAt,
+        score: summary.score,
+        durationSeconds: summary.timePlayed,
+        endReason: summary.endReason,
+        config: { sessionSeconds: match.options.sessionSeconds, spawnIntervalSeconds: match.options.spawnIntervalSeconds },
+      }
+      // Queued (and persisted) first, sent in the background: it survives failures and refreshes.
+      pendingMatches.add(record)
+      const result: MatchResult = { ...summary, matchId: match.id, finishedAt, options: match.options }
       saveLastResult(result)
       goTo({ name: 'result', result })
     },
@@ -72,7 +94,13 @@ export default function App() {
 
   switch (screen.name) {
     case 'menu':
-      return <MainMenu onPlay={play} onOptions={() => goTo({ name: 'options' })} />
+      return (
+        <MainMenu
+          onPlay={play}
+          onOptions={() => goTo({ name: 'options' })}
+          onRecords={(tab) => goTo({ name: 'records', tab })}
+        />
+      )
     case 'options':
       return <OptionsScreen onBack={mainMenu} />
     case 'play':
@@ -87,5 +115,7 @@ export default function App() {
       )
     case 'result':
       return <ResultScreen result={screen.result} onPlayAgain={play} onMainMenu={mainMenu} />
+    case 'records':
+      return <RecordsScreen initialTab={screen.tab} onBack={mainMenu} />
   }
 }

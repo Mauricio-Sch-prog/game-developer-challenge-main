@@ -1,6 +1,9 @@
+import type { RecordsTab } from './RecordsScreen'
+
 interface MainMenuProps {
   onPlay: () => void
   onOptions: () => void
+  onRecords: (tab: RecordsTab) => void
 }
 
 const CONTROLS: readonly [keys: string, action: string][] = [
@@ -11,7 +14,7 @@ const CONTROLS: readonly [keys: string, action: string][] = [
   ['Esc / P', 'Pause'],
 ]
 
-export function MainMenu({ onPlay, onOptions }: MainMenuProps) {
+export function MainMenu({ onPlay, onOptions, onRecords }: MainMenuProps) {
   return (
     <main className="screen">
       <div className="panel menu-panel">
@@ -27,6 +30,14 @@ export function MainMenu({ onPlay, onOptions }: MainMenuProps) {
           <button type="button" className="btn btn-primary" onClick={onOptions} data-sound="open">
             Options
           </button>
+          <div className="menu-records">
+            <button type="button" className="btn btn-secondary btn-small" onClick={() => onRecords('ranking')} data-sound="open">
+              Ranking
+            </button>
+            <button type="button" className="btn btn-secondary btn-small" onClick={() => onRecords('history')} data-sound="open">
+              Match History
+            </button>
+          </div>
         </div>
 
         <section className="controls" aria-labelledby="controls-title">

@@ -268,6 +268,234 @@ button:disabled {
   font-size: 0.9rem;
 }
 
+/* ---------- Shared small controls ---------- */
+
+.btn-small {
+  width: min(170px, 100%);
+  font-size: 0.85rem;
+}
+
+.link-button {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: none;
+  color: var(--gold);
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.text-input,
+.mock-panel select {
+  width: min(240px, 100%);
+  box-sizing: border-box;
+  padding: 0.35rem 0.6rem;
+  border: 2px solid #8a5a2b;
+  border-radius: 8px;
+  background: #13283a;
+  font-weight: 700;
+  text-align: center;
+}
+
+.text-input[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+.menu-records {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mock-panel {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: center;
+  width: 100%;
+  margin: 0.5rem 0 0;
+  padding: 0.75rem;
+  border: 1px dashed rgb(246 213 142 / 40%);
+  border-radius: 10px;
+}
+
+.mock-panel legend {
+  padding: 0 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ---------- Captain's Log (ranking / history) ---------- */
+
+.records-panel {
+  width: min(860px, 100%);
+}
+
+.records-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.records-tabs .btn {
+  width: min(210px, 42vw);
+  font-size: 1rem;
+}
+
+.records-body {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  width: 100%;
+}
+
+.records-subtitle {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.records-refresh {
+  min-height: 1.1em;
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.records-message {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  padding: 1.5rem 0.5rem;
+}
+
+.records-pending {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  background: rgb(241 178 60 / 18%);
+  font-size: 0.85rem;
+}
+
+.records-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  transition: opacity 0.15s;
+}
+
+/* Previous page shown while the next one loads. */
+.records-table-wrap.is-stale {
+  opacity: 0.55;
+}
+
+.records-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+  text-align: left;
+  font-weight: 700;
+}
+
+.records-table th {
+  padding: 0 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.records-table td {
+  padding: 0.55rem 0.75rem;
+  background: rgb(9 24 36 / 70%);
+  white-space: nowrap;
+}
+
+.records-table td:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.records-table td:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.records-table tr.is-you td {
+  background: rgb(160 130 70 / 45%);
+}
+
+.records-rank,
+.records-points {
+  color: var(--gold);
+}
+
+.records-date {
+  font-size: 0.85rem;
+}
+
+.records-star {
+  width: 1.2em;
+  margin-right: 0.35rem;
+  vertical-align: -0.2em;
+}
+
+.records-badge {
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.records-time-up {
+  color: #c8e6a0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.records-defeated {
+  color: var(--error);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pagination .round-button {
+  width: 40px;
+  height: 40px;
+}
+
+/* ---------- Registration status (result screen) ---------- */
+
+.registration {
+  font-size: 0.9rem;
+}
+
+.registration.is-saved {
+  color: #c8e6a0;
+}
+
+.registration.is-failed {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  color: var(--error);
+}
+
 /* ---------- Result ---------- */
 
 .result-score {
