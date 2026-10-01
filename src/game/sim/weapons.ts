@@ -62,6 +62,8 @@ export function fireBroadside(world: World, ship: Ship, weapon: SideWeaponConfig
 export function updatePlayerWeapons(world: World, intent: PlayerIntent, dt: number): void {
   const { player, playerCooldowns: cd } = world
   const { frontCannon, sideCannons } = world.config.player
+  // A Chaser can sink the player earlier in this same step: a sunk ship never fires.
+  if (!player.alive) return
 
   cd.front = Math.max(0, cd.front - dt)
   cd.left = Math.max(0, cd.left - dt)

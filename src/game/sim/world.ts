@@ -37,6 +37,7 @@ export function createWorld(config: GameConfig, seed: number): World {
     events: [],
     spawnTimer: config.spawn.initialDelay,
     spawnCount: 0,
+    spawnEvents: 0,
     random: createRandom(seed),
     nextId: 2,
   }

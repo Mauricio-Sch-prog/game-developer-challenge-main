@@ -85,6 +85,11 @@ export interface GameConfig {
     initialDelay: number
     /** Spawn order, repeated in a loop. Also defines the type distribution. */
     pattern: EnemyKind[]
+    /**
+     * After every `every` single spawns, the next spawn brings `size` enemies
+     * at once, each at its own free spot. `size: 1` turns groups off.
+     */
+    group: { every: number; size: number }
     /** Enemies never appear closer than this to the player. */
     minDistanceFromPlayer: number
     /** A spawn is skipped while this many enemies are alive. */
@@ -164,6 +169,7 @@ export const DEFAULT_CONFIG: GameConfig = {
     intervalSeconds: 3,
     initialDelay: 2,
     pattern: ['chaser', 'shooter', 'chaser'],
+    group: { every: 3, size: 2 },
     minDistanceFromPlayer: 450,
     maxEnemies: 10,
   },

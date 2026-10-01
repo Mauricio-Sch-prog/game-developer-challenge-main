@@ -17,7 +17,8 @@ function damageShip(world: World, ship: Ship, amount: number, scores: boolean): 
 
 /**
  * Projectile vs ship. Each projectile is marked dead on its first hit, so it
- * can never damage twice. Only enemies destroyed by the player score.
+ * can never damage twice. Only enemies destroyed by the player score, and
+ * only while the player is still afloat.
  */
 export function resolveProjectileHits(world: World): void {
   const { player, enemies } = world
@@ -26,6 +27,8 @@ export function resolveProjectileHits(world: World): void {
     if (!p.alive) continue
 
     if (p.team === 'player') {
+      // Once the player sinks the match is over: its shots no longer hit or score.
+      if (!player.alive) continue
       for (const enemy of enemies) {
         if (!enemy.alive || !circlesOverlap(p, enemy)) continue
         p.alive = false

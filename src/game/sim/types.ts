@@ -106,6 +106,8 @@ export interface World {
   spawnTimer: number
   /** How many enemies were spawned (index into the spawn pattern). */
   spawnCount: number
+  /** How many spawns happened, a group counting once (decides when the next group comes). */
+  spawnEvents: number
   /** Seeded random source: same seed, same match. */
   random: Random
   nextId: number

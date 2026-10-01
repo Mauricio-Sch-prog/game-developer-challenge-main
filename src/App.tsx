@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type { MatchRecord } from './api/contracts'
 import { pendingMatches } from './api/pendingMatches'
 import { useMatchSync } from './api/useMatchSync'
@@ -67,10 +67,14 @@ export default function App() {
   const play = useCallback(() => goTo({ name: 'play', match: newMatch() }), [goTo])
   const mainMenu = useCallback(() => goTo({ name: 'menu' }), [goTo])
 
+  /** The finished match: recorded the moment it ends, shown once its banner is over. */
+  const finished = useRef<MatchResult | null>(null)
   const match = screen.name === 'play' ? screen.match : null
+
   const finish = useCallback(
     (summary: MatchSummary) => {
-      if (!match) return
+      // One record per match, however many times this is called.
+      if (!match || finished.current?.matchId === match.id) return
       const finishedAt = new Date().toISOString()
       const player = loadPlayer()
       const record: MatchRecord = {
@@ -86,11 +90,18 @@ export default function App() {
       // Queued (and persisted) first, sent in the background: it survives failures and refreshes.
       pendingMatches.add(record)
       const result: MatchResult = { ...summary, matchId: match.id, finishedAt, options: match.options }
+      finished.current = result
       saveLastResult(result)
-      goTo({ name: 'result', result })
+      // The match can no longer be abandoned: a refresh from now on shows its result.
+      writeSessionFlag(SHOWING_RESULT_KEY, true)
     },
-    [match, goTo],
+    [match],
   )
+
+  const showResult = useCallback(() => {
+    const result = finished.current
+    if (result && result.matchId === match?.id) goTo({ name: 'result', result })
+  }, [match, goTo])
 
   switch (screen.name) {
     case 'menu':
@@ -110,6 +121,7 @@ export default function App() {
           config={screen.match.config}
           seed={screen.match.seed}
           onFinish={finish}
+          onShowResult={showResult}
           onExit={mainMenu}
         />
       )

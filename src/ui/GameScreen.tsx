@@ -17,13 +17,15 @@ type LoadState =
 interface GameScreenProps {
   config: GameConfig
   seed: number
-  /** Called once when the match ends (not when it is abandoned). */
+  /** Called as soon as the match ends (not when it is abandoned). */
   onFinish: (summary: MatchSummary) => void
+  /** Called once the end-of-match banner has been shown. */
+  onShowResult: () => void
   onExit: () => void
 }
 
 /** Loads the match assets (with progress and retry), then mounts the arena and its UI. */
-export function GameScreen({ config, seed, onFinish, onExit }: GameScreenProps) {
+export function GameScreen({ config, seed, onFinish, onShowResult, onExit }: GameScreenProps) {
   const [load, setLoad] = useState<LoadState>({ status: 'loading', progress: 0 })
   const [attempt, setAttempt] = useState(0)
   // One store and one engine per match (a restart remounts this whole screen).
@@ -80,6 +82,7 @@ export function GameScreen({ config, seed, onFinish, onExit }: GameScreenProps) 
             onResume={() => engineRef.current?.resume()}
             onExit={onExit}
             onFinish={onFinish}
+            onShowResult={onShowResult}
           />
         </>
       )}

@@ -18,17 +18,20 @@ interface MatchOverlayProps {
   onResume: () => void
   onExit: () => void
   onFinish: (summary: MatchSummary) => void
+  onShowResult: () => void
 }
 
 /** Pause dialog and end-of-match banner, driven by the store status. */
-export function MatchOverlay({ store, rotateHint, onResume, onExit, onFinish }: MatchOverlayProps) {
+export function MatchOverlay({ store, rotateHint, onResume, onExit, onFinish, onShowResult }: MatchOverlayProps) {
   const { status, score, timePlayed, endReason } = useSyncExternalStore(store.subscribe, store.getSnapshot)
 
   useEffect(() => {
     if (status !== 'over' || !endReason) return
-    const timer = window.setTimeout(() => onFinish({ score, timePlayed, endReason }), RESULT_DELAY_MS)
+    // Recorded at once: a refresh during the banner must not lose a finished match.
+    onFinish({ score, timePlayed, endReason })
+    const timer = window.setTimeout(onShowResult, RESULT_DELAY_MS)
     return () => window.clearTimeout(timer)
-  }, [status, score, timePlayed, endReason, onFinish])
+  }, [status, score, timePlayed, endReason, onFinish, onShowResult])
 
   if (status === 'paused') {
     return (
