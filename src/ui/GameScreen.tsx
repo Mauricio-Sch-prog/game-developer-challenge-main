@@ -14,12 +14,13 @@ type LoadState =
 
 interface GameScreenProps {
   config: GameConfig
+  seed: number
   onRestart: () => void
   onExit: () => void
 }
 
 /** Loads the match assets (with progress and retry), then mounts the arena and its UI. */
-export function GameScreen({ config, onRestart, onExit }: GameScreenProps) {
+export function GameScreen({ config, seed, onRestart, onExit }: GameScreenProps) {
   const [load, setLoad] = useState<LoadState>({ status: 'loading', progress: 0 })
   const [attempt, setAttempt] = useState(0)
   // One store and one engine per match (a restart remounts this whole screen).
@@ -52,7 +53,7 @@ export function GameScreen({ config, onRestart, onExit }: GameScreenProps) {
     <div className="game-screen">
       {load.status === 'ready' && (
         <>
-          <GameCanvas config={config} store={store} engineRef={engineRef} />
+          <GameCanvas config={config} seed={seed} store={store} engineRef={engineRef} />
           <Hud store={store} onPause={() => engineRef.current?.pause()} />
           <MatchOverlay
             store={store}

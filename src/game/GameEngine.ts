@@ -3,11 +3,13 @@ import type { GameConfig } from './config'
 import { InputManager } from './input/InputManager'
 import { ArenaView } from './render/ArenaView'
 import { EffectsLayer } from './render/EffectsLayer'
+import { EnemyLayer } from './render/EnemyLayer'
 import { ProjectileLayer } from './render/ProjectileLayer'
 import { ShipView } from './render/ShipView'
 import type { GameStore, HudState } from './store/GameStore'
 import type { World } from './sim/types'
 import { createWorld, updateWorld } from './sim/world'
+import { testHooksEnabled, type PirateBattleTestHooks } from './testHooks'
 
 /**
  * Longest single simulation step. Slow frames are split into several steps,
@@ -48,15 +50,18 @@ export class GameEngine {
   private readonly worldLayer = new Container()
   private app: Application | null = null
   private playerView: ShipView | null = null
+  private enemyLayer: EnemyLayer | null = null
   private projectileLayer: ProjectileLayer | null = null
   private effectsLayer: EffectsLayer | null = null
   private paused = false
   private destroyed = false
+  private testHooks: PirateBattleTestHooks | null = null
 
-  constructor(config: GameConfig, store: GameStore) {
+  /** `seed` makes enemy spawns reproducible (same seed, same match). */
+  constructor(config: GameConfig, store: GameStore, seed: number) {
     this.config = config
     this.store = store
-    this.world = createWorld(config)
+    this.world = createWorld(config, seed)
   }
 
   async mount(host: HTMLElement): Promise<void> {
@@ -89,6 +94,11 @@ export class GameEngine {
     window.addEventListener('blur', this.pause)
     document.addEventListener('visibilitychange', this.handleVisibilityChange)
     app.ticker.add(this.tick)
+
+    if (testHooksEnabled()) {
+      this.testHooks = { getWorld: () => this.world }
+      window.__PIRATE_BATTLE__ = this.testHooks
+    }
   }
 
   destroy(): void {
@@ -97,6 +107,7 @@ export class GameEngine {
     this.input.detach()
     window.removeEventListener('blur', this.pause)
     document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+    if (this.testHooks && window.__PIRATE_BATTLE__ === this.testHooks) delete window.__PIRATE_BATTLE__
 
     const app = this.app
     if (!app) return
@@ -107,6 +118,7 @@ export class GameEngine {
     // they live in the Assets cache and are reused by the next match.
     app.destroy({ removeView: true }, { children: true })
     this.playerView = null
+    this.enemyLayer = null
     this.projectileLayer = null
     this.effectsLayer = null
   }
@@ -143,13 +155,21 @@ export class GameEngine {
   }
 
   private buildScene(app: Application): void {
-    this.playerView = new ShipView(5, 'green')
+    this.playerView = new ShipView('player')
+    this.enemyLayer = new EnemyLayer()
     this.projectileLayer = new ProjectileLayer()
     this.effectsLayer = new EffectsLayer()
-    // Draw order: background, ships, cannonballs, effects on top.
-    this.worldLayer.addChild(new ArenaView(this.config.arena), this.playerView, this.projectileLayer, this.effectsLayer)
+    // Draw order: background, sinking wrecks, ships, cannonballs, effects on top.
+    this.worldLayer.addChild(
+      new ArenaView(this.config.arena),
+      this.effectsLayer.wrecks,
+      this.enemyLayer,
+      this.playerView,
+      this.projectileLayer,
+      this.effectsLayer,
+    )
     app.stage.addChild(this.worldLayer)
-    this.syncViews()
+    this.syncViews(0)
   }
 
   /** Game loop, driven by the Pixi ticker (requestAnimationFrame). */
@@ -170,14 +190,16 @@ export class GameEngine {
     if (this.world.status === 'over') this.input.setEnabled(false)
 
     this.effectsLayer?.update(frameTime)
-    this.syncViews()
+    this.syncViews(frameTime)
     this.publishHud()
   }
 
   /** Simulation → display objects. Pixi renders right after this, in the same tick. */
-  private syncViews(): void {
-    this.playerView?.sync(this.world.player)
-    this.projectileLayer?.sync(this.world.projectiles)
+  private syncViews(dt: number): void {
+    const { player, enemies, projectiles, elapsed } = this.world
+    this.playerView?.sync(player, dt, elapsed)
+    this.enemyLayer?.sync(enemies, dt, elapsed)
+    this.projectileLayer?.sync(projectiles)
   }
 
   /** Simulation → React. Cheap to call every frame: the store ignores unchanged values. */

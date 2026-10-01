@@ -5,6 +5,7 @@ import type { GameStore } from '../game/store/GameStore'
 
 interface GameCanvasProps {
   config: GameConfig
+  seed: number
   store: GameStore
   /** Lets the surrounding UI send commands (pause/resume) to the running engine. */
   engineRef: RefObject<GameEngine | null>
@@ -15,14 +16,14 @@ interface GameCanvasProps {
  * the engine owns everything inside it. This component renders once per
  * match; the game loop never triggers React renders.
  */
-export function GameCanvas({ config, store, engineRef }: GameCanvasProps) {
+export function GameCanvas({ config, seed, store, engineRef }: GameCanvasProps) {
   const hostRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const host = hostRef.current
     if (!host) return
 
-    const engine = new GameEngine(config, store)
+    const engine = new GameEngine(config, store, seed)
     engineRef.current = engine
     engine.mount(host).catch((error: unknown) => {
       console.error('Failed to start the game engine', error)
@@ -32,7 +33,7 @@ export function GameCanvas({ config, store, engineRef }: GameCanvasProps) {
       engine.destroy()
       if (engineRef.current === engine) engineRef.current = null
     }
-  }, [config, store, engineRef])
+  }, [config, seed, store, engineRef])
 
   return <div ref={hostRef} className="game-canvas" />
 }

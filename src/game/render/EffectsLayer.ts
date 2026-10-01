@@ -1,5 +1,6 @@
-import { Container, type DestroyOptions, Graphics, GraphicsContext, Sprite, Texture } from 'pixi.js'
-import type { GameEvent } from '../sim/types'
+import { AnimatedSprite, Container, type DestroyOptions, Graphics, GraphicsContext, Sprite, Texture } from 'pixi.js'
+import type { GameEvent, ShipKind } from '../sim/types'
+import { SHIP_SCALE, SPRITE_ROTATION_OFFSET, wreckTexture } from './ShipView'
 
 interface VisualEffect {
   display: Container
@@ -12,10 +13,13 @@ interface VisualEffect {
 const lerp = (from: number, to: number, t: number): number => from + (to - from) * t
 
 /**
- * Short-lived visual feedback (muzzle flash, water splash, impact puff).
+ * Short-lived visual feedback (muzzle flash, splash, hits, explosions).
  * Purely cosmetic: it reacts to simulation events and never affects the rules.
+ * Everything is animated from `update(dt)`, so effects freeze while paused.
  */
 export class EffectsLayer extends Container {
+  /** Sinking wrecks go here; the engine places this layer below the ships. */
+  readonly wrecks = new Container()
   private readonly running: VisualEffect[] = []
   /** One ring geometry shared by every splash (each Graphics only references it). */
   private readonly ring = new GraphicsContext().circle(0, 0, 10).stroke({ width: 3, color: 0xffffff })
@@ -30,6 +34,14 @@ export class EffectsLayer extends Container {
         break
       case 'splash':
         this.addSplash(event.x, event.y)
+        break
+      case 'hit':
+        this.addFlash(event.x, event.y, 0.45, 0.8, 0.25)
+        break
+      case 'destroyed':
+        // The player's own view turns into the wreck; enemy views are removed.
+        if (event.kind !== 'player') this.addWreck(event.kind, event.x, event.y, event.angle)
+        this.addExplosion(event.x, event.y)
         break
     }
   }
@@ -75,9 +87,41 @@ export class EffectsLayer extends Container {
     })
   }
 
-  private add(display: Container, duration: number, animate: (t: number) => void): void {
+  /**
+   * Plays explosion_3 → 2 → 1 (small to big), then fades. `autoUpdate: false`
+   * keeps it off the global ticker, so it stops while the game is paused.
+   */
+  private addExplosion(x: number, y: number): void {
+    const textures = [3, 2, 1].map((n) => Texture.from(`explosion_${n}`))
+    const explosion = new AnimatedSprite({ textures, autoUpdate: false })
+    explosion.anchor.set(0.5)
+    explosion.position.set(x, y)
+    this.add(explosion, 0.6, (t) => {
+      explosion.gotoAndStop(Math.min(textures.length - 1, Math.floor(t * 2 * textures.length)))
+      explosion.scale.set(lerp(0.8, 1.4, t))
+      explosion.alpha = t < 0.5 ? 1 : 1 - (t - 0.5) * 2
+    })
+  }
+
+  private addWreck(kind: ShipKind, x: number, y: number, angle: number): void {
+    const wreck = new Sprite(wreckTexture(kind))
+    wreck.anchor.set(0.5)
+    wreck.position.set(x, y)
+    wreck.rotation = angle + SPRITE_ROTATION_OFFSET
+    this.add(
+      wreck,
+      1.6,
+      (t) => {
+        wreck.scale.set(SHIP_SCALE * lerp(1, 0.75, t))
+        wreck.alpha = 1 - t
+      },
+      this.wrecks,
+    )
+  }
+
+  private add(display: Container, duration: number, animate: (t: number) => void, parent: Container = this): void {
     animate(0)
-    this.addChild(display)
+    parent.addChild(display)
     this.running.push({ display, age: 0, duration, animate })
   }
 }

@@ -1,11 +1,15 @@
 import type { GameConfig } from '../config'
+import { updateEnemies } from './ai'
 import { islandHitbox } from './arena'
+import { resolveProjectileHits, resolveShipContacts } from './combat'
 import { moveShip, resolveShipObstacles } from './movement'
-import { updateProjectiles } from './projectiles'
+import { removeDead, updateProjectiles } from './projectiles'
+import { createRandom } from './random'
+import { updateSpawner } from './spawner'
 import type { EndReason, PlayerIntent, World } from './types'
 import { updatePlayerWeapons } from './weapons'
 
-export function createWorld(config: GameConfig): World {
+export function createWorld(config: GameConfig, seed: number): World {
   const { arena, player } = config
   return {
     config,
@@ -23,6 +27,7 @@ export function createWorld(config: GameConfig): World {
       alive: true,
     },
     playerCooldowns: { front: 0, left: 0, right: 0 },
+    enemies: [],
     projectiles: [],
     elapsed: 0,
     timeLeft: config.match.durationSeconds,
@@ -30,6 +35,9 @@ export function createWorld(config: GameConfig): World {
     status: 'running',
     endReason: null,
     events: [],
+    spawnTimer: config.spawn.initialDelay,
+    spawnCount: 0,
+    random: createRandom(seed),
     nextId: 2,
   }
 }
@@ -55,10 +63,31 @@ export function updateWorld(world: World, intent: PlayerIntent, dt: number): voi
   world.elapsed = world.config.match.durationSeconds - world.timeLeft
 
   const { player } = world
+
+  // 1. Movement (player input, enemy AI), then ship collisions.
   moveShip(player, world.config.player, intent.thrust ? 1 : 0, intent.turn, step)
+  updateEnemies(world, step)
+  resolveShipContacts(world)
   resolveShipObstacles(player, world)
+  for (const enemy of world.enemies) resolveShipObstacles(enemy, world)
+
+  // 2. Weapons and projectiles (Shooters fire inside updateEnemies).
   updatePlayerWeapons(world, intent, step)
   updateProjectiles(world, step)
+  resolveProjectileHits(world)
 
-  if (world.timeLeft <= 0) endMatch(world, 'time')
+  // 3. Clean up: destroyed things stop taking part in anything.
+  removeDead(world.projectiles)
+  removeDead(world.enemies)
+
+  // 4. End conditions, then new enemies.
+  if (!player.alive) {
+    endMatch(world, 'death')
+    return
+  }
+  if (world.timeLeft <= 0) {
+    endMatch(world, 'time')
+    return
+  }
+  updateSpawner(world, step)
 }

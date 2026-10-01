@@ -1,5 +1,6 @@
-import type { GameConfig } from '../config'
+import type { EnemyKind, GameConfig } from '../config'
 import type { Rect } from './collision'
+import type { Random } from './random'
 
 /**
  * Pure simulation state. Nothing in here knows about PixiJS or React:
@@ -21,6 +22,12 @@ export interface Ship {
   hp: number
   maxHp: number
   alive: boolean
+}
+
+export interface Enemy extends Ship {
+  kind: EnemyKind
+  /** Seconds until the Shooter can fire again (unused by the Chaser). */
+  fireCooldown: number
 }
 
 /** Who fired a projectile: player shots only hit enemies and vice versa. */
@@ -69,6 +76,8 @@ export type GameEvent =
   | { type: 'shot'; x: number; y: number; angle: number }
   | { type: 'splash'; x: number; y: number }
   | { type: 'impact'; x: number; y: number }
+  | { type: 'hit'; x: number; y: number }
+  | { type: 'destroyed'; kind: ShipKind; x: number; y: number; angle: number }
 
 export interface World {
   /** Snapshot of the configuration taken when the match started. */
@@ -76,6 +85,7 @@ export interface World {
   islands: Rect[]
   player: Ship
   playerCooldowns: WeaponCooldowns
+  enemies: Enemy[]
   projectiles: Projectile[]
   /** Simulated seconds since the match started (paused time is not counted). */
   elapsed: number
@@ -85,5 +95,11 @@ export interface World {
   endReason: EndReason | null
   /** Events of the last step only; cleared at the start of every step. */
   events: GameEvent[]
+  /** Seconds until the next spawn attempt. */
+  spawnTimer: number
+  /** How many enemies were spawned (index into the spawn pattern). */
+  spawnCount: number
+  /** Seeded random source: same seed, same match. */
+  random: Random
   nextId: number
 }

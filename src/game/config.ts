@@ -39,6 +39,23 @@ export type IslandConfig =
   | { kind: 'sand'; col: number; row: number; cols: number; rows: number }
   | { kind: 'grass'; col: number; row: number }
 
+export type EnemyKind = 'chaser' | 'shooter'
+
+export interface ChaserConfig extends ShipStats {
+  /** Damage dealt to the player when it rams (and explodes). */
+  contactDamage: number
+}
+
+export interface ShooterConfig extends ShipStats {
+  /** Fires when the player is closer than this... */
+  attackRange: number
+  /** ...and stops approaching once closer than this. */
+  preferredDistance: number
+  /** Max heading error (radians) to open fire. */
+  aimTolerance: number
+  cannon: WeaponConfig
+}
+
 export interface GameConfig {
   arena: {
     width: number
@@ -57,6 +74,22 @@ export interface GameConfig {
   }
   projectile: {
     radius: number
+  }
+  enemies: {
+    chaser: ChaserConfig
+    shooter: ShooterConfig
+  }
+  spawn: {
+    /** Seconds between spawns. */
+    intervalSeconds: number
+    /** Delay before the first enemy appears. */
+    initialDelay: number
+    /** Spawn order, repeated in a loop. Also defines the type distribution. */
+    pattern: EnemyKind[]
+    /** Enemies never appear closer than this to the player. */
+    minDistanceFromPlayer: number
+    /** A spawn is skipped while this many enemies are alive. */
+    maxEnemies: number
   }
 }
 
@@ -99,5 +132,38 @@ export const DEFAULT_CONFIG: GameConfig = {
   },
   projectile: {
     radius: 5,
+  },
+  enemies: {
+    chaser: {
+      maxHp: 30,
+      maxSpeed: 165,
+      acceleration: 220,
+      turnSpeed: 2.2,
+      radius: 26,
+      contactDamage: 20,
+    },
+    shooter: {
+      maxHp: 50,
+      maxSpeed: 110,
+      acceleration: 160,
+      turnSpeed: 1.6,
+      radius: 28,
+      attackRange: 420,
+      preferredDistance: 300,
+      aimTolerance: 0.15,
+      cannon: {
+        cooldown: 2,
+        damage: 8,
+        projectileSpeed: 380,
+        projectileLifetime: 1.3,
+      },
+    },
+  },
+  spawn: {
+    intervalSeconds: 3,
+    initialDelay: 2,
+    pattern: ['chaser', 'shooter', 'chaser'],
+    minDistanceFromPlayer: 450,
+    maxEnemies: 10,
   },
 }

@@ -69,6 +69,30 @@ export function pushCircleOutOfRect(c: Circle, r: Rect): boolean {
   return true
 }
 
+/**
+ * Pushes two overlapping circles apart. `shareA` is how much of the
+ * correction `a` takes (0.5 = both move the same amount).
+ */
+export function separateCircles(a: Circle, b: Circle, shareA = 0.5): void {
+  let dx = b.x - a.x
+  let dy = b.y - a.y
+  let dist = Math.sqrt(dx * dx + dy * dy)
+  const overlap = a.radius + b.radius - dist
+  if (overlap <= 0) return
+  if (dist === 0) {
+    // Perfectly stacked: pick any direction.
+    dx = 1
+    dy = 0
+    dist = 1
+  }
+  const nx = dx / dist
+  const ny = dy / dist
+  a.x -= nx * overlap * shareA
+  a.y -= ny * overlap * shareA
+  b.x += nx * overlap * (1 - shareA)
+  b.y += ny * overlap * (1 - shareA)
+}
+
 /** Keeps the whole circle inside [0, width] x [0, height]. Returns true when clamped. */
 export function clampCircleToBounds(c: Circle, width: number, height: number): boolean {
   const x = clamp(c.x, c.radius, width - c.radius)

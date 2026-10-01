@@ -7,15 +7,22 @@ interface Match {
   id: number
   /** Snapshot taken at start; later option changes only affect new matches. */
   config: GameConfig
+  seed: number
+}
+
+/** `?seed=123` in the URL replays the same match (used by tests); random otherwise. */
+function matchSeed(): number {
+  const fromUrl = Number(new URLSearchParams(window.location.search).get('seed'))
+  return Number.isInteger(fromUrl) && fromUrl > 0 ? fromUrl : Math.floor(Math.random() * 2 ** 32)
 }
 
 export default function App() {
   const [match, setMatch] = useState<Match | null>(null)
 
-  const play = () => setMatch({ id: Date.now(), config: structuredClone(DEFAULT_CONFIG) })
+  const play = () => setMatch({ id: Date.now(), config: structuredClone(DEFAULT_CONFIG), seed: matchSeed() })
 
   if (match) {
-    return <GameScreen key={match.id} config={match.config} onRestart={play} onExit={() => setMatch(null)} />
+    return <GameScreen key={match.id} config={match.config} seed={match.seed} onRestart={play} onExit={() => setMatch(null)} />
   }
 
   // Temporary menu; replaced by the real screens on night 2.
