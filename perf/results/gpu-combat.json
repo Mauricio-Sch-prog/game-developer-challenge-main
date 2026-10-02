@@ -1,0 +1,1505 @@
+{
+  "environment": {
+    "project": "gpu",
+    "cpu": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz (8 threads)",
+    "memoryGiB": 7.1,
+    "os": "Ubuntu 26.04 LTS",
+    "power": "unknown",
+    "browser": "Chromium 153.0.8010.12 (headless)",
+    "webgl": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (CML GT2), OpenGL ES 3.2)",
+    "viewport": {
+      "width": 1366,
+      "height": 768,
+      "devicePixelRatio": 1
+    },
+    "date": "2026-10-01T23:29:53.673Z"
+  },
+  "match": {
+    "sessionSeconds": 180,
+    "spawnIntervalSeconds": 0.5,
+    "seed": 2,
+    "healBelow": 60,
+    "score": 188,
+    "enemiesSpawned": 225
+  },
+  "frames": {
+    "frames": 10795,
+    "seconds": 179.9,
+    "averageFps": 60,
+    "frameTimeMs": {
+      "mean": 16.67,
+      "p50": 16.7,
+      "p95": 16.7,
+      "p99": 16.8,
+      "max": 16.8
+    },
+    "histogram": {
+      "<=17ms": 10795,
+      "17-20ms": 0,
+      "20-33ms": 0,
+      "33-50ms": 0,
+      ">50ms": 0
+    }
+  },
+  "mainThreadMsPerFrame": {
+    "task": 0.88,
+    "script": 0.54
+  },
+  "entities": {
+    "enemies": {
+      "average": 9.5,
+      "peak": 10
+    },
+    "projectiles": {
+      "average": 3.9,
+      "peak": 9
+    },
+    "displayObjects": {
+      "average": 233.9,
+      "peak": 245
+    },
+    "lowestFpsSecond": 60
+  },
+  "samples": [
+    {
+      "t": 1,
+      "elapsed": 1.1,
+      "enemies": 0,
+      "projectiles": 0,
+      "displayObjects": 162,
+      "fps": 62
+    },
+    {
+      "t": 2,
+      "elapsed": 2.1,
+      "enemies": 1,
+      "projectiles": 0,
+      "displayObjects": 168,
+      "fps": 60
+    },
+    {
+      "t": 3,
+      "elapsed": 3.1,
+      "enemies": 3,
+      "projectiles": 1,
+      "displayObjects": 181,
+      "fps": 60
+    },
+    {
+      "t": 4,
+      "elapsed": 4.1,
+      "enemies": 5,
+      "projectiles": 1,
+      "displayObjects": 195,
+      "fps": 60
+    },
+    {
+      "t": 5,
+      "elapsed": 5.1,
+      "enemies": 7,
+      "projectiles": 1,
+      "displayObjects": 206,
+      "fps": 60
+    },
+    {
+      "t": 6,
+      "elapsed": 6.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 221,
+      "fps": 60
+    },
+    {
+      "t": 7,
+      "elapsed": 7.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 8,
+      "elapsed": 8.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 241,
+      "fps": 60
+    },
+    {
+      "t": 9,
+      "elapsed": 9.1,
+      "enemies": 8,
+      "projectiles": 0,
+      "displayObjects": 225,
+      "fps": 60
+    },
+    {
+      "t": 10,
+      "elapsed": 10.1,
+      "enemies": 8,
+      "projectiles": 5,
+      "displayObjects": 223,
+      "fps": 60
+    },
+    {
+      "t": 11,
+      "elapsed": 11.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 12,
+      "elapsed": 12.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 227,
+      "fps": 60
+    },
+    {
+      "t": 13,
+      "elapsed": 13.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 14,
+      "elapsed": 14.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 15,
+      "elapsed": 15.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 16,
+      "elapsed": 16.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 17,
+      "elapsed": 17.1,
+      "enemies": 9,
+      "projectiles": 5,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 18,
+      "elapsed": 18.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 19,
+      "elapsed": 19.1,
+      "enemies": 9,
+      "projectiles": 8,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 20,
+      "elapsed": 20.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 21,
+      "elapsed": 21.1,
+      "enemies": 9,
+      "projectiles": 6,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 22,
+      "elapsed": 22.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 230,
+      "fps": 60
+    },
+    {
+      "t": 23,
+      "elapsed": 23.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 24,
+      "elapsed": 24.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 25,
+      "elapsed": 25.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 26,
+      "elapsed": 26.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 27,
+      "elapsed": 27.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 28,
+      "elapsed": 28.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 29,
+      "elapsed": 29.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 30,
+      "elapsed": 30.1,
+      "enemies": 9,
+      "projectiles": 3,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 31,
+      "elapsed": 31.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 32,
+      "elapsed": 32.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 33,
+      "elapsed": 33.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 34,
+      "elapsed": 34.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 228,
+      "fps": 60
+    },
+    {
+      "t": 35,
+      "elapsed": 35.1,
+      "enemies": 9,
+      "projectiles": 5,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 36,
+      "elapsed": 36.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 37,
+      "elapsed": 37.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 38,
+      "elapsed": 38.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 39,
+      "elapsed": 39.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 40,
+      "elapsed": 40.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 41,
+      "elapsed": 41.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 42,
+      "elapsed": 42.1,
+      "enemies": 9,
+      "projectiles": 8,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 43,
+      "elapsed": 43.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 44,
+      "elapsed": 44.1,
+      "enemies": 9,
+      "projectiles": 5,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 45,
+      "elapsed": 45.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 46,
+      "elapsed": 46.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 47,
+      "elapsed": 47.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 48,
+      "elapsed": 48.1,
+      "enemies": 10,
+      "projectiles": 9,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 49,
+      "elapsed": 49.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 50,
+      "elapsed": 50.1,
+      "enemies": 10,
+      "projectiles": 9,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 51,
+      "elapsed": 51.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 52,
+      "elapsed": 52.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 53,
+      "elapsed": 53.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 54,
+      "elapsed": 54.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 55,
+      "elapsed": 55.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 56,
+      "elapsed": 56.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 57,
+      "elapsed": 57.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 240,
+      "fps": 60
+    },
+    {
+      "t": 58,
+      "elapsed": 58.1,
+      "enemies": 9,
+      "projectiles": 5,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 59,
+      "elapsed": 59.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 243,
+      "fps": 60
+    },
+    {
+      "t": 60,
+      "elapsed": 60.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 61,
+      "elapsed": 61.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 62,
+      "elapsed": 62.1,
+      "enemies": 9,
+      "projectiles": 3,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 63,
+      "elapsed": 63.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 64,
+      "elapsed": 64.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 65,
+      "elapsed": 65.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 66,
+      "elapsed": 66.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 67,
+      "elapsed": 67.1,
+      "enemies": 9,
+      "projectiles": 2,
+      "displayObjects": 230,
+      "fps": 60
+    },
+    {
+      "t": 68,
+      "elapsed": 68.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 69,
+      "elapsed": 69.1,
+      "enemies": 9,
+      "projectiles": 3,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 70,
+      "elapsed": 70.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 71,
+      "elapsed": 71.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 72,
+      "elapsed": 72.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 73,
+      "elapsed": 73.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 74,
+      "elapsed": 74.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 75,
+      "elapsed": 75.1,
+      "enemies": 8,
+      "projectiles": 3,
+      "displayObjects": 229,
+      "fps": 60
+    },
+    {
+      "t": 76,
+      "elapsed": 76.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 77,
+      "elapsed": 77.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 78,
+      "elapsed": 78.1,
+      "enemies": 9,
+      "projectiles": 8,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 79,
+      "elapsed": 79.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 80,
+      "elapsed": 80.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 81,
+      "elapsed": 81.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 82,
+      "elapsed": 82.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 83,
+      "elapsed": 83.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 84,
+      "elapsed": 84.1,
+      "enemies": 9,
+      "projectiles": 2,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 85,
+      "elapsed": 85.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 86,
+      "elapsed": 86.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 87,
+      "elapsed": 87.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 88,
+      "elapsed": 88.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 89,
+      "elapsed": 89.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 90,
+      "elapsed": 90.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 91,
+      "elapsed": 91.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 242,
+      "fps": 60
+    },
+    {
+      "t": 92,
+      "elapsed": 92.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 93,
+      "elapsed": 93.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 94,
+      "elapsed": 94.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 95,
+      "elapsed": 95.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 96,
+      "elapsed": 96.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 97,
+      "elapsed": 97.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 98,
+      "elapsed": 98.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 99,
+      "elapsed": 99.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 100,
+      "elapsed": 100.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 101,
+      "elapsed": 101.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 102,
+      "elapsed": 102.1,
+      "enemies": 8,
+      "projectiles": 1,
+      "displayObjects": 226,
+      "fps": 60
+    },
+    {
+      "t": 103,
+      "elapsed": 103.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 104,
+      "elapsed": 104.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 105,
+      "elapsed": 105.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 106,
+      "elapsed": 106.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 107,
+      "elapsed": 107.1,
+      "enemies": 9,
+      "projectiles": 2,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 108,
+      "elapsed": 108.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 109,
+      "elapsed": 109.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 110,
+      "elapsed": 110.1,
+      "enemies": 8,
+      "projectiles": 2,
+      "displayObjects": 228,
+      "fps": 60
+    },
+    {
+      "t": 111,
+      "elapsed": 111.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 112,
+      "elapsed": 112.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 113,
+      "elapsed": 113.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 114,
+      "elapsed": 114.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 115,
+      "elapsed": 115.1,
+      "enemies": 9,
+      "projectiles": 2,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 116,
+      "elapsed": 116.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 117,
+      "elapsed": 117.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 118,
+      "elapsed": 118.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 119,
+      "elapsed": 119.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 120,
+      "elapsed": 120.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 121,
+      "elapsed": 121.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 122,
+      "elapsed": 122.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 123,
+      "elapsed": 123.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 124,
+      "elapsed": 124.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 125,
+      "elapsed": 125.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 126,
+      "elapsed": 126.1,
+      "enemies": 9,
+      "projectiles": 3,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 127,
+      "elapsed": 127.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 128,
+      "elapsed": 128.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 129,
+      "elapsed": 129.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 130,
+      "elapsed": 130.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 131,
+      "elapsed": 131.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 132,
+      "elapsed": 132.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 241,
+      "fps": 60
+    },
+    {
+      "t": 133,
+      "elapsed": 133.1,
+      "enemies": 9,
+      "projectiles": 3,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 134,
+      "elapsed": 134.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 135,
+      "elapsed": 135.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 136,
+      "elapsed": 136.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 137,
+      "elapsed": 137.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 138,
+      "elapsed": 138.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 139,
+      "elapsed": 139.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 140,
+      "elapsed": 140.1,
+      "enemies": 10,
+      "projectiles": 9,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 141,
+      "elapsed": 141.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 142,
+      "elapsed": 142.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 143,
+      "elapsed": 143.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 144,
+      "elapsed": 144.1,
+      "enemies": 9,
+      "projectiles": 1,
+      "displayObjects": 232,
+      "fps": 60
+    },
+    {
+      "t": 145,
+      "elapsed": 145.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 146,
+      "elapsed": 146.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 147,
+      "elapsed": 147.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 148,
+      "elapsed": 148.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 230,
+      "fps": 60
+    },
+    {
+      "t": 149,
+      "elapsed": 149.1,
+      "enemies": 10,
+      "projectiles": 6,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 150,
+      "elapsed": 150.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 231,
+      "fps": 60
+    },
+    {
+      "t": 151,
+      "elapsed": 151.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 152,
+      "elapsed": 152.1,
+      "enemies": 9,
+      "projectiles": 0,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 153,
+      "elapsed": 153.1,
+      "enemies": 9,
+      "projectiles": 2,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 154,
+      "elapsed": 154.1,
+      "enemies": 9,
+      "projectiles": 7,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 155,
+      "elapsed": 155.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 245,
+      "fps": 60
+    },
+    {
+      "t": 156,
+      "elapsed": 156.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 157,
+      "elapsed": 157.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 158,
+      "elapsed": 158.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 159,
+      "elapsed": 159.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 241,
+      "fps": 60
+    },
+    {
+      "t": 160,
+      "elapsed": 160.1,
+      "enemies": 10,
+      "projectiles": 9,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 161,
+      "elapsed": 161.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 162,
+      "elapsed": 162.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 163,
+      "elapsed": 163.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 164,
+      "elapsed": 164.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 235,
+      "fps": 60
+    },
+    {
+      "t": 165,
+      "elapsed": 165.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 166,
+      "elapsed": 166.1,
+      "enemies": 10,
+      "projectiles": 3,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 167,
+      "elapsed": 167.1,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 240,
+      "fps": 60
+    },
+    {
+      "t": 168,
+      "elapsed": 168.1,
+      "enemies": 10,
+      "projectiles": 8,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 169,
+      "elapsed": 169.1,
+      "enemies": 9,
+      "projectiles": 2,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 170,
+      "elapsed": 170.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 171,
+      "elapsed": 171.1,
+      "enemies": 10,
+      "projectiles": 9,
+      "displayObjects": 239,
+      "fps": 60
+    },
+    {
+      "t": 172,
+      "elapsed": 172.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 241,
+      "fps": 60
+    },
+    {
+      "t": 173,
+      "elapsed": 173.1,
+      "enemies": 10,
+      "projectiles": 4,
+      "displayObjects": 234,
+      "fps": 60
+    },
+    {
+      "t": 174,
+      "elapsed": 174.1,
+      "enemies": 9,
+      "projectiles": 4,
+      "displayObjects": 233,
+      "fps": 60
+    },
+    {
+      "t": 175,
+      "elapsed": 175.1,
+      "enemies": 10,
+      "projectiles": 1,
+      "displayObjects": 238,
+      "fps": 60
+    },
+    {
+      "t": 176,
+      "elapsed": 176.1,
+      "enemies": 10,
+      "projectiles": 7,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 177,
+      "elapsed": 177.1,
+      "enemies": 10,
+      "projectiles": 0,
+      "displayObjects": 242,
+      "fps": 60
+    },
+    {
+      "t": 178,
+      "elapsed": 178.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 236,
+      "fps": 60
+    },
+    {
+      "t": 179,
+      "elapsed": 179.1,
+      "enemies": 10,
+      "projectiles": 2,
+      "displayObjects": 237,
+      "fps": 60
+    },
+    {
+      "t": 179.9,
+      "elapsed": 180,
+      "enemies": 10,
+      "projectiles": 5,
+      "displayObjects": 242,
+      "fps": 54
+    }
+  ]
+}

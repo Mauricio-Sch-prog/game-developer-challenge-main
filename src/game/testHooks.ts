@@ -13,6 +13,8 @@ export interface PirateBattleTestHooks {
    * every frame, e.g. by pressing keys. Does nothing while paused.
    */
   advance: (seconds: number, beforeFrame?: (world: Readonly<World>) => void) => void
+  /** Display objects in the scene (ships, projectiles, effects, tiles...), for profiling. */
+  countDisplayObjects: () => number
 }
 
 declare global {

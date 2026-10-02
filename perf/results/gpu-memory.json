@@ -1,0 +1,79 @@
+{
+  "environment": {
+    "project": "gpu",
+    "cpu": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz (8 threads)",
+    "memoryGiB": 7.1,
+    "os": "Ubuntu 26.04 LTS",
+    "power": "AC",
+    "browser": "Chromium 153.0.8010.12 (headless)",
+    "webgl": "ANGLE (Intel, Mesa Intel(R) UHD Graphics (CML GT2), OpenGL ES 3.2)",
+    "viewport": {
+      "width": 1366,
+      "height": 768,
+      "devicePixelRatio": 1
+    },
+    "date": "2026-10-02T00:37:52.018Z"
+  },
+  "cycle": {
+    "sessionSeconds": 180,
+    "spawnIntervalSeconds": 0.5,
+    "playSeconds": 30,
+    "leaveVia": "pause → Main Menu"
+  },
+  "rows": [
+    {
+      "label": "menu, before any match",
+      "heapUsedMB": 4.05,
+      "domNodes": 95,
+      "eventListeners": 176,
+      "canvases": 0,
+      "peakDisplayObjects": null
+    },
+    {
+      "label": "after cycle 1",
+      "heapUsedMB": 7.36,
+      "domNodes": 99,
+      "eventListeners": 211,
+      "canvases": 0,
+      "peakDisplayObjects": 240
+    },
+    {
+      "label": "after cycle 2",
+      "heapUsedMB": 7.62,
+      "domNodes": 99,
+      "eventListeners": 217,
+      "canvases": 0,
+      "peakDisplayObjects": 241
+    },
+    {
+      "label": "after cycle 3",
+      "heapUsedMB": 7.84,
+      "domNodes": 99,
+      "eventListeners": 210,
+      "canvases": 0,
+      "peakDisplayObjects": 238
+    },
+    {
+      "label": "after cycle 4",
+      "heapUsedMB": 7.99,
+      "domNodes": 99,
+      "eventListeners": 213,
+      "canvases": 0,
+      "peakDisplayObjects": 242
+    },
+    {
+      "label": "after cycle 5",
+      "heapUsedMB": 8.13,
+      "domNodes": 99,
+      "eventListeners": 213,
+      "canvases": 0,
+      "peakDisplayObjects": 236
+    }
+  ],
+  "growthFromCycle1To5": {
+    "heapUsedMB": 0.77,
+    "domNodes": 0,
+    "eventListeners": 2
+  },
+  "consoleWarnings": []
+}

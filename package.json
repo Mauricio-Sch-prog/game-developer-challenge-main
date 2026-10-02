@@ -11,7 +11,8 @@
     "typecheck": "tsc -b",
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "perf": "playwright test --config playwright.perf.config.ts"
   },
   "dependencies": {
     "@pixi/sound": "^6.0.1",

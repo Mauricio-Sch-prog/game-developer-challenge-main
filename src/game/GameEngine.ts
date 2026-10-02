@@ -24,6 +24,13 @@ const MAX_FRAME_TIME = 0.25
 const TEST_FPS = 60
 const LETTERBOX_COLOR = '#0b2a3a'
 
+/** Display objects in a scene graph, the root included. */
+function countDisplayObjects(root: Container): number {
+  let total = 1
+  for (const child of root.children) total += countDisplayObjects(child)
+  return total
+}
+
 /** HUD values for a fresh match, before the engine has run a single frame. */
 export function initialHudState(config: GameConfig): HudState {
   return {
@@ -105,7 +112,11 @@ export class GameEngine {
     this.audio.start()
 
     if (testHooksEnabled()) {
-      this.testHooks = { getWorld: () => this.world, advance: this.advance }
+      this.testHooks = {
+        getWorld: () => this.world,
+        advance: this.advance,
+        countDisplayObjects: () => (this.app ? countDisplayObjects(this.app.stage) : 0),
+      }
       window.__PIRATE_BATTLE__ = this.testHooks
     }
     if (this.manualClock) {

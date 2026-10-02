@@ -74,13 +74,17 @@ export class GameAudio {
     }
   }
 
+  /**
+   * The loops are stopped, not paused: @pixi/sound only releases (and recycles)
+   * an instance that is playing, so a paused loop left with the match would
+   * stay in memory forever. `update` starts them again after the resume.
+   */
   pause(): void {
-    this.setLoopsPaused(true)
+    this.releaseLoops()
     playSound('game_pause', { volume: 0.6 })
   }
 
   resume(): void {
-    this.setLoopsPaused(false)
     playSound('game_resume', { volume: 0.6 })
   }
 
@@ -100,16 +104,15 @@ export class GameAudio {
     this.sailing ??= playSound('ship_sailing_loop', { volume: 0, loop: true })
   }
 
-  private setLoopsPaused(paused: boolean): void {
-    if (this.ocean) this.ocean.paused = paused
-    if (this.sailing) this.sailing.paused = paused
-  }
-
-  private stopLoops(): void {
-    this.stopped = true
+  private releaseLoops(): void {
     this.ocean?.stop()
     this.sailing?.stop()
     this.ocean = null
     this.sailing = null
+  }
+
+  private stopLoops(): void {
+    this.stopped = true
+    this.releaseLoops()
   }
 }
